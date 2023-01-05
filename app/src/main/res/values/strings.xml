@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Voice Numbers</string>
+
+    <string name="home_app_name">Numbers Lintening App</string>
+    <string name="home_best_score_title">Best Score</string>
+    <string name="home_challenge">Challenge</string>
+    <string name="home_training">Training</string>
+    <string name="home_leaderboard">Leaderboard</string>
+
+    <string name="score_best_score_title">Best score</string>
+    <string name="score_current_score_title">Score</string>
+    <string name="score_try_again">Try again</string>
+    <string name="score_finish">Finish</string>
+
+    <string name="training_title">Training</string>
+    <string name="training_correct">Correct!</string>
+    <string name="training_incorrect">Incorrect!</string>
+</resources>
