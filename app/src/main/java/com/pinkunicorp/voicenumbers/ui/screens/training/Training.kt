@@ -6,12 +6,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
@@ -21,9 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.upstream.RawResourceDataSource
 import com.pinkunicorp.voicenumbers.R
 import com.pinkunicorp.voicenumbers.ui.elements.Key
 import com.pinkunicorp.voicenumbers.ui.elements.NumberFieldView
@@ -38,8 +36,6 @@ fun TrainingScreen(
     trainingViewModel: TrainingViewModel = viewModel()
 ) {
     val state by trainingViewModel.uiState.collectAsState()
-    val context = LocalContext.current
-    val exoPlayer by remember { mutableStateOf(ExoPlayer.Builder(context).build()) }
 
     TrainingContent(
         state = state,
@@ -47,7 +43,6 @@ fun TrainingScreen(
             trainingViewModel.onRepeatClick()
         },
         onBackClick = {
-            exoPlayer.release()
             trainingViewModel.onBackClick()
         },
         onNumberKeyClick = { number ->
@@ -58,17 +53,15 @@ fun TrainingScreen(
         when (it) {
             is TrainingEvent.GoToBack -> navController.navigateUp()
             is TrainingEvent.PlayNumber -> {
-                exoPlayer.stop()
-                playNumber(exoPlayer, it.number)
+                playNumber(it.number)
             }
         }
         trainingViewModel.consumeEvents(state.events)
     }
 }
 
-private fun playNumber(exoPlayer: ExoPlayer, number: Long) {
-    Speech.getInstance().say(number.toString())
-    val listMediaPlayer = mutableListOf<MediaItem?>()
+private fun playNumber(number: Long) {
+    val listMediaPlayer = mutableListOf<String?>()
     val billion = number / 1000000000
     val million = (number - billion * 1000000000) / 1000000
     val thousand = (number - billion * 1000000000 - million * 1000000) / 1000
@@ -170,53 +163,47 @@ private fun playNumber(exoPlayer: ExoPlayer, number: Long) {
     if (one > 0) {
         listMediaPlayer.add(getMediaItem(one.toString()))
     }
-
-//    exoPlayer.setMediaItems(listMediaPlayer.filterNotNull())
-//    exoPlayer.setPlaybackSpeed(1.5F)
-//    exoPlayer.prepare()
-//    exoPlayer.play()
+    Speech.getInstance().say(listMediaPlayer.filterNotNull().joinToString(" "))
 }
 
-fun getMediaItem(number: String): MediaItem? {
+fun getMediaItem(number: String): String? {
     return when (number) {
-        "0" -> getSound(R.raw.number_0)
-        "1" -> getSound(R.raw.number_1)
-        "2" -> getSound(R.raw.number_2)
-        "3" -> getSound(R.raw.number_3)
-        "4" -> getSound(R.raw.number_4)
-        "5" -> getSound(R.raw.number_5)
-        "6" -> getSound(R.raw.number_6)
-        "7" -> getSound(R.raw.number_7)
-        "8" -> getSound(R.raw.number_8)
-        "9" -> getSound(R.raw.number_9)
-        "10" -> getSound(R.raw.number_10)
-        "11" -> getSound(R.raw.number_11)
-        "12" -> getSound(R.raw.number_12)
-        "13" -> getSound(R.raw.number_13)
-        "14" -> getSound(R.raw.number_14)
-        "15" -> getSound(R.raw.number_15)
-        "16" -> getSound(R.raw.number_16)
-        "17" -> getSound(R.raw.number_17)
-        "18" -> getSound(R.raw.number_18)
-        "19" -> getSound(R.raw.number_19)
-        "20" -> getSound(R.raw.number_20)
-        "30" -> getSound(R.raw.number_30)
-        "40" -> getSound(R.raw.number_40)
-        "50" -> getSound(R.raw.number_50)
-        "60" -> getSound(R.raw.number_60)
-        "70" -> getSound(R.raw.number_70)
-        "80" -> getSound(R.raw.number_80)
-        "90" -> getSound(R.raw.number_90)
-        "hundred" -> getSound(R.raw.hundred)
-        "thousand" -> getSound(R.raw.thousand)
-        "million" -> getSound(R.raw.million)
-        "billion" -> getSound(R.raw.billion)
-        "dot" -> getSound(R.raw.dot)
+        "0" -> "zero"
+        "1" -> "one"
+        "2" -> "two"
+        "3" -> "three"
+        "4" -> "four"
+        "5" -> "five"
+        "6" -> "six"
+        "7" -> "seven"
+        "8" -> "eight"
+        "9" -> "nine"
+        "10" -> "ten"
+        "11" -> "eleven"
+        "12" -> "twelve"
+        "13" -> "thirteen"
+        "14" -> "fourteen"
+        "15" -> "fifteen"
+        "16" -> "sixteen"
+        "17" -> "seventeen"
+        "18" -> "eighteen"
+        "19" -> "nineteen"
+        "20" -> "twenty"
+        "30" -> "thirty"
+        "40" -> "fourty"
+        "50" -> "fifty"
+        "60" -> "sixty"
+        "70" -> "seventy"
+        "80" -> "eighty"
+        "90" -> "ninety"
+        "hundred" -> "hungred"
+        "thousand" -> "thousand"
+        "million" -> "million"
+        "billion" -> "billion"
+        "dot" -> "dot"
         else -> null
     }
 }
-
-private fun getSound(sound: Int) = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(sound))
 
 @Composable
 fun TrainingToolbarView(modifier: Modifier = Modifier, onBackClick: () -> Unit) {
