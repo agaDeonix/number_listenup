@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 
 sealed class TrainingEvent {
     object GoToBack : TrainingEvent()
+    object GoToSettings : TrainingEvent()
     data class PlayNumber(val number: Long) : TrainingEvent()
 }
 
@@ -135,6 +136,12 @@ class TrainingViewModel : ViewModel() {
             it.copy(
                 events = it.events + TrainingEvent.PlayNumber(targetNumber)
             )
+        }
+    }
+
+    fun onSettingsClick() {
+        _uiState.update {
+            it.copy(events = it.events + TrainingEvent.GoToSettings)
         }
     }
 }

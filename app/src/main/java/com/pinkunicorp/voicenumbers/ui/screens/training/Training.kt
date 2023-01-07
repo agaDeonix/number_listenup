@@ -23,26 +23,34 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pinkunicorp.voicenumbers.R
+import com.pinkunicorp.voicenumbers.other.tts.TTSService
 import com.pinkunicorp.voicenumbers.ui.elements.Key
 import com.pinkunicorp.voicenumbers.ui.elements.NumberFieldView
 import com.pinkunicorp.voicenumbers.ui.elements.NumbersKeyboard
 import com.pinkunicorp.voicenumbers.ui.elements.RepeatListeningButton
-import net.gotev.speech.Speech
-
+import com.pinkunicorp.voicenumbers.ui.screens.Screen
+import org.koin.androidx.compose.get
 
 @Composable
 fun TrainingScreen(
     navController: NavController,
-    trainingViewModel: TrainingViewModel = viewModel()
+    trainingViewModel: TrainingViewModel = viewModel(),
+    ttsService: TTSService = get()
 ) {
     val state by trainingViewModel.uiState.collectAsState()
 
     TrainingContent(
         state = state,
         onRepeatClick = {
+            ttsService.stop()
             trainingViewModel.onRepeatClick()
         },
+        onSettingsClick = {
+            ttsService.stop()
+            trainingViewModel.onSettingsClick()
+        },
         onBackClick = {
+            ttsService.stop()
             trainingViewModel.onBackClick()
         },
         onNumberKeyClick = { number ->
@@ -52,15 +60,16 @@ fun TrainingScreen(
     state.events.forEach {
         when (it) {
             is TrainingEvent.GoToBack -> navController.navigateUp()
+            is TrainingEvent.GoToSettings -> navController.navigate(Screen.Settings.route)
             is TrainingEvent.PlayNumber -> {
-                playNumber(it.number)
+                playNumber(ttsService, it.number)
             }
         }
         trainingViewModel.consumeEvents(state.events)
     }
 }
 
-private fun playNumber(number: Long) {
+private fun playNumber(ttsService: TTSService, number: Long) {
     val listMediaPlayer = mutableListOf<String?>()
     val billion = number / 1000000000
     val million = (number - billion * 1000000000) / 1000000
@@ -163,7 +172,7 @@ private fun playNumber(number: Long) {
     if (one > 0) {
         listMediaPlayer.add(getMediaItem(one.toString()))
     }
-    Speech.getInstance().say(listMediaPlayer.filterNotNull().joinToString(" "))
+    ttsService.speak(listMediaPlayer.filterNotNull().joinToString(" "))
 }
 
 fun getMediaItem(number: String): String? {
@@ -206,7 +215,11 @@ fun getMediaItem(number: String): String? {
 }
 
 @Composable
-fun TrainingToolbarView(modifier: Modifier = Modifier, onBackClick: () -> Unit) {
+fun TrainingToolbarView(
+    modifier: Modifier = Modifier,
+    onSettingsClick: () -> Unit,
+    onBackClick: () -> Unit
+) {
     Box(
         modifier = modifier
             .height(54.dp)
@@ -238,6 +251,23 @@ fun TrainingToolbarView(modifier: Modifier = Modifier, onBackClick: () -> Unit) 
                 fontWeight = FontWeight.Bold
             )
         )
+
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .aspectRatio(1f)
+                .clickable { onSettingsClick() }
+                .align(Alignment.CenterEnd)
+        ) {
+            Image(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+                imageVector = ImageVector.vectorResource(id = R.drawable.ic_settings),
+                contentDescription = ""
+            )
+        }
+
         Divider(
             modifier = Modifier
                 .fillMaxWidth()
@@ -250,6 +280,7 @@ fun TrainingToolbarView(modifier: Modifier = Modifier, onBackClick: () -> Unit) 
 @Composable
 fun TrainingContent(
     state: TrainingState,
+    onSettingsClick: () -> Unit,
     onBackClick: () -> Unit,
     onRepeatClick: () -> Unit,
     onNumberKeyClick: (Key) -> Unit = {}
@@ -260,9 +291,10 @@ fun TrainingContent(
             .fillMaxWidth()
             .fillMaxHeight(),
     ) {
-        TrainingToolbarView(onBackClick = {
-            onBackClick()
-        })
+        TrainingToolbarView(
+            onSettingsClick = onSettingsClick,
+            onBackClick = onBackClick
+        )
         Box(modifier = Modifier.weight(1f)) {
             RepeatListeningButton(
                 modifier = Modifier.fillMaxHeight(),
@@ -290,6 +322,7 @@ fun TrainingContentPreview() {
             currentNumber = "123"
         ),
         onRepeatClick = {},
+        onSettingsClick = {},
         onBackClick = {}
     )
 }
