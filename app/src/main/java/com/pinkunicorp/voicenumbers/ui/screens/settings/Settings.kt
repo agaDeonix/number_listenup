@@ -4,6 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Checkbox
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,20 +23,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pinkunicorp.voicenumbers.R
+import com.pinkunicorp.voicenumbers.data.model.NumberType
+import com.pinkunicorp.voicenumbers.data.model.NumberVariantState
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    settingsViewModel: SettingsViewModel = viewModel()
+    settingsViewModel: SettingsViewModel = koinViewModel()
 ) {
     val state by settingsViewModel.uiState.collectAsState()
 
-    SettingsContent {
-        settingsViewModel.onBackClick()
-    }
+    SettingsContent(
+        state = state,
+        onBackClick = {
+            settingsViewModel.onBackClick()
+        }, onNumberVariantChanged = { numberVariant, isEnable ->
+            settingsViewModel.onNumberVariantChanged(numberVariant, isEnable)
+        }
+    )
 
     state.events.forEach {
         when (it) {
@@ -45,6 +55,8 @@ fun SettingsScreen(
 
 @Composable
 fun SettingsContent(
+    state: SettingsState,
+    onNumberVariantChanged: (numberVariant: NumberVariantState, isEnable: Boolean) -> Unit,
     onBackClick: () -> Unit
 ) {
     Column(
@@ -56,6 +68,64 @@ fun SettingsContent(
         SettingsToolbarView(
             onBackClick = onBackClick
         )
+        LazyColumn {
+            items(state.numberVariants) { numberVariantState ->
+                NumberVariantView(numberVariantState) {
+                    onNumberVariantChanged(numberVariantState, it)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun NumberVariantView(
+    numberVariantState: NumberVariantState,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onCheckedChange(!numberVariantState.isEnable)
+            },
+        verticalAlignment = Alignment.Top
+    ) {
+        Checkbox(checked = numberVariantState.isEnable, onCheckedChange = {
+            onCheckedChange(!numberVariantState.isEnable)
+        })
+        Spacer(modifier = Modifier.width(2.dp))
+        Column(
+            modifier = Modifier
+                .padding(top = 12.dp)
+                .fillMaxWidth()
+
+        ) {
+            Text(
+                text = stringResource(id = getNumberVariantNameId(numberVariantState.type)),
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+            Text(
+                text = stringResource(id = getNumberVariantNameId(numberVariantState.type)),
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Normal
+                )
+            )
+        }
+    }
+}
+
+private fun getNumberVariantNameId(type: NumberType): Int {
+    return when (type) {
+        NumberType.WHOLE -> R.string.settings_number_title_whole
+        NumberType.ORDINAL -> R.string.settings_number_title_ordinal
+        NumberType.RATIONAL -> R.string.settings_number_title_rational
+        NumberType.FRACTION -> R.string.settings_number_title_fraction
+        NumberType.DATE -> R.string.settings_number_title_date
     }
 }
 
@@ -108,7 +178,19 @@ fun SettingsToolbarView(
 @Preview
 @Composable
 fun SettingsScreenPreview() {
-    SettingsContent {
-
-    }
+    SettingsContent(state = SettingsState(
+        numberVariants = listOf(
+            NumberVariantState(
+                type = NumberType.WHOLE,
+                isEnable = true
+            ),
+            NumberVariantState(
+                type = NumberType.ORDINAL,
+                isEnable = false
+            ),
+        )
+    ),
+        onBackClick = {},
+        onNumberVariantChanged = { _, _ -> }
+    )
 }

@@ -16,4 +16,9 @@
     <string name="training_correct">Correct!</string>
     <string name="training_incorrect">Incorrect!</string>
     <string name="settings_title">Settings</string>
+    <string name="settings_number_title_whole">Whole numbers</string>
+    <string name="settings_number_title_ordinal">Ordinal numbers</string>
+    <string name="settings_number_title_rational">Rational numbers</string>
+    <string name="settings_number_title_fraction">Fraction numbers</string>
+    <string name="settings_number_title_date">Dates</string>
 </resources>
