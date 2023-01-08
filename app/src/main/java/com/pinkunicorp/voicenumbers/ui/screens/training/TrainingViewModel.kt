@@ -3,8 +3,12 @@ package com.pinkunicorp.voicenumbers.ui.screens.training
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pinkunicorp.voicenumbers.data.model.NumberType
 import com.pinkunicorp.voicenumbers.data.model.NumberVariantState
 import com.pinkunicorp.voicenumbers.data.repository.SettingsRepository
+import com.pinkunicorp.voicenumbers.extentions.toOrdinalNumberString
+import com.pinkunicorp.voicenumbers.extentions.toRationalString
+import com.pinkunicorp.voicenumbers.extentions.toWholeNumberString
 import com.pinkunicorp.voicenumbers.ui.elements.Key
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +20,7 @@ sealed class TrainingEvent {
     object GoToBack : TrainingEvent()
     object GoToSettings : TrainingEvent()
     object NoneTypesForTrainings : TrainingEvent()
-    data class PlayNumber(val number: Long) : TrainingEvent()
+    data class PlayNumber(val number: String) : TrainingEvent()
 }
 
 data class TrainingState(
@@ -31,14 +35,47 @@ sealed class TrainingFieldState {
     object Error : TrainingFieldState()
 }
 
-class TrainingViewModel(val settingsRepository: SettingsRepository) : ViewModel() {
+class TrainingViewModel(private val settingsRepository: SettingsRepository) : ViewModel() {
 
-    private var targetNumber: Long? = null
+    sealed class TrainingNumber(val type: NumberType) {
+        data class WholeNumber(val number: Long) : TrainingNumber(NumberType.WHOLE) {
+            override fun getTrainingValue() = number.toWholeNumberString()
+            override fun getCorrectValue() = number.toString()
+        }
+
+        data class OrdinalNumber(val number: Long) : TrainingNumber(NumberType.ORDINAL) {
+            override fun getTrainingValue() = number.toOrdinalNumberString()
+            override fun getCorrectValue() = number.toString()
+        }
+
+        data class RationalNumber(val number: Float) : TrainingNumber(NumberType.RATIONAL) {
+            override fun getTrainingValue() = number.toRationalString()
+            override fun getCorrectValue() = number.toString()
+        }
+
+        data class FractionNumber(val numerator: Long, val denominator: Long) :
+            TrainingNumber(NumberType.FRACTION) {
+            override fun getTrainingValue() =
+                numerator.toWholeNumberString() + " " + denominator.toOrdinalNumberString()
+
+            override fun getCorrectValue() = "$numerator/$denominator"
+        }
+
+        data class DateNumber(val date: Long) : TrainingNumber(NumberType.DATE) {
+            override fun getTrainingValue() = date.toString()//FIXME need rework
+            override fun getCorrectValue() = date.toString()
+        }
+
+        abstract fun getTrainingValue(): String
+        abstract fun getCorrectValue(): String
+    }
+
+    private var targetNumber: TrainingNumber? = null
     private var numberVariantForGenerate: List<NumberVariantState> = emptyList()
 
     fun onStart() {
         viewModelScope.launch {
-            delay(1000)
+            delay(500)
             val newStates = settingsRepository.getNumberVariantStates().filter { it.isEnable }
             var needRegenerate = false
             if (numberVariantForGenerate.isEmpty()) {
@@ -50,6 +87,7 @@ class TrainingViewModel(val settingsRepository: SettingsRepository) : ViewModel(
                 }
             }
             if (numberVariantForGenerate.isEmpty()) {
+                targetNumber = null
                 _uiState.update {
                     it.copy(events = it.events + TrainingEvent.NoneTypesForTrainings)
                 }
@@ -58,7 +96,9 @@ class TrainingViewModel(val settingsRepository: SettingsRepository) : ViewModel(
                     targetNumber = generateNumber()
                     _uiState.update {
                         it.copy(
-                            events = it.events + TrainingEvent.PlayNumber(targetNumber!!)
+                            events = it.events + TrainingEvent.PlayNumber(
+                                targetNumber?.getTrainingValue() ?: ""
+                            )
                         )
                     }
                 }
@@ -74,13 +114,31 @@ class TrainingViewModel(val settingsRepository: SettingsRepository) : ViewModel(
     val uiState = _uiState.asStateFlow()
 
 
-    private fun generateNumber(): Long {
-        val chance = (0..100).random()
-        return when (chance) {
-            in 0..3 -> (1_000_000_000L..999_999_999_999L).random()
-            in 4..10 -> (1_000_000L..999_999_999L).random()
-            in 11..20 -> (10_000L..999_999L).random()
-            in 21..50 -> (100L..9_999L).random()
+    private fun generateNumber(): TrainingNumber {
+        val numberVariant = numberVariantForGenerate.random()
+        return when (numberVariant.type) {
+            NumberType.WHOLE -> TrainingNumber.WholeNumber(generateLong())
+            NumberType.ORDINAL -> TrainingNumber.OrdinalNumber(generateLong())
+            NumberType.RATIONAL -> TrainingNumber.RationalNumber(generateFloat())
+            NumberType.FRACTION -> TrainingNumber.FractionNumber(
+                (1L..999L).random(),
+                (1L..999L).random()
+            )
+            NumberType.DATE -> TrainingNumber.DateNumber((1L..9999L).random())
+        }
+
+    }
+
+    private fun generateFloat(): Float {
+        val denominator = (1..9999).random()
+        return ((0..100).random().toString() + "." + denominator.toString()).toFloat()
+    }
+
+    private fun generateLong(): Long {
+        return when ((0..100).random()) {
+            in 0..10 -> (10_000L..999_999L).random()
+            in 11..20 -> (1000L..9_999L).random()
+            in 21..50 -> (100L..999L).random()
             else -> (0L..99L).random()
         }
     }
@@ -132,37 +190,57 @@ class TrainingViewModel(val settingsRepository: SettingsRepository) : ViewModel(
     }
 
     private fun checkValue() {
-        if ((_uiState.value.currentNumber.toLongOrNull() ?: 0) == targetNumber) {
-            viewModelScope.launch {
-                _uiState.update {
-                    it.copy(
-                        fieldState = TrainingFieldState.Correct
-                    )
-                }
-                delay(500L)
-                targetNumber = generateNumber()
-                _uiState.update {
-                    it.copy(
-                        currentNumber = "",
-                        fieldState = TrainingFieldState.Normal,
-                        events = it.events + TrainingEvent.PlayNumber(targetNumber!!)
-                    )
-                }
+        targetNumber?.let { it ->
+            if (it.getCorrectValue() == _uiState.value.currentNumber) {
+                showCorrect()
+            } else {
+                showError()
             }
-        } else {
+        }
+    }
+
+    private fun showError() {
+        _uiState.update {
+            it.copy(
+                fieldState = TrainingFieldState.Error
+            )
+        }
+    }
+
+    private fun showCorrect() {
+        viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    fieldState = TrainingFieldState.Error
+                    fieldState = TrainingFieldState.Correct
+                )
+            }
+            delay(500L)
+            targetNumber = generateNumber()
+            _uiState.update {
+                it.copy(
+                    currentNumber = "",
+                    fieldState = TrainingFieldState.Normal,
+                    events = it.events + TrainingEvent.PlayNumber(targetNumber?.getTrainingValue() ?: "")
                 )
             }
         }
     }
 
     fun onRepeatClick() {
-        _uiState.update {
-            it.copy(
-                events = it.events + TrainingEvent.PlayNumber(targetNumber!!)
-            )
+        if (targetNumber == null) {
+            _uiState.update {
+                it.copy(
+                    events = it.events + TrainingEvent.NoneTypesForTrainings
+                )
+            }
+        } else {
+            _uiState.update {
+                it.copy(
+                    events = it.events + TrainingEvent.PlayNumber(
+                        targetNumber?.getTrainingValue() ?: ""
+                    )
+                )
+            }
         }
     }
 

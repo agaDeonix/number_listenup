@@ -28,4 +28,5 @@
     <string name="settings_number_fraction_desc">numerals from 1 to 999 in numerator and denominator.</string>
     <string name="settings_number_date_title">Dates</string>
     <string name="settings_number_date_desc">several types of dates like dates with BC and AD, and common dates like 2000, 1825 etc.</string>
+    <string name="settings_error_none_selected_types">"None selected types for training "</string>
 </resources>
