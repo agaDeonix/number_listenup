@@ -6,6 +6,7 @@ import com.pinkunicorp.voicenumbers.other.tts.TTSServiceImpl
 import com.pinkunicorp.voicenumbers.data.repository.PrefSettingsRepositoryImpl
 import com.pinkunicorp.voicenumbers.data.repository.SettingsRepository
 import com.pinkunicorp.voicenumbers.ui.screens.settings.SettingsViewModel
+import com.pinkunicorp.voicenumbers.ui.screens.training.TrainingViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -21,6 +22,7 @@ class MyApp : Application() {
 
     private val viewModelModule = module {
         viewModel { SettingsViewModel(get()) }
+        viewModel { TrainingViewModel(get()) }
     }
 
     override fun onCreate() {

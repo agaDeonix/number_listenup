@@ -69,6 +69,19 @@ fun SettingsContent(
             onBackClick = onBackClick
         )
         LazyColumn {
+            item {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp)
+                        .padding(top = 12.dp)
+                        .fillMaxWidth(),
+                    text = stringResource(id = R.string.settings_desc),
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                )
+            }
             items(state.numberVariants) { numberVariantState ->
                 NumberVariantView(numberVariantState) {
                     onNumberVariantChanged(numberVariantState, it)
@@ -94,10 +107,10 @@ fun NumberVariantView(
         Checkbox(checked = numberVariantState.isEnable, onCheckedChange = {
             onCheckedChange(!numberVariantState.isEnable)
         })
-        Spacer(modifier = Modifier.width(2.dp))
         Column(
             modifier = Modifier
                 .padding(top = 12.dp)
+                .padding(end = 12.dp)
                 .fillMaxWidth()
 
         ) {
@@ -109,7 +122,7 @@ fun NumberVariantView(
                 )
             )
             Text(
-                text = stringResource(id = getNumberVariantNameId(numberVariantState.type)),
+                text = stringResource(id = getNumberVariantDescId(numberVariantState.type)),
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal
@@ -121,11 +134,21 @@ fun NumberVariantView(
 
 private fun getNumberVariantNameId(type: NumberType): Int {
     return when (type) {
-        NumberType.WHOLE -> R.string.settings_number_title_whole
-        NumberType.ORDINAL -> R.string.settings_number_title_ordinal
-        NumberType.RATIONAL -> R.string.settings_number_title_rational
-        NumberType.FRACTION -> R.string.settings_number_title_fraction
-        NumberType.DATE -> R.string.settings_number_title_date
+        NumberType.WHOLE -> R.string.settings_number_whole_title
+        NumberType.ORDINAL -> R.string.settings_number_ordinal_title
+        NumberType.RATIONAL -> R.string.settings_number_rational_title
+        NumberType.FRACTION -> R.string.settings_number_fraction_title
+        NumberType.DATE -> R.string.settings_number_date_title
+    }
+}
+
+private fun getNumberVariantDescId(type: NumberType): Int {
+    return when (type) {
+        NumberType.WHOLE -> R.string.settings_number_whole_desc
+        NumberType.ORDINAL -> R.string.settings_number_ordinal_desc
+        NumberType.RATIONAL -> R.string.settings_number_rational_desc
+        NumberType.FRACTION -> R.string.settings_number_fraction_desc
+        NumberType.DATE -> R.string.settings_number_date_desc
     }
 }
 

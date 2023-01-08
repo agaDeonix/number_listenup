@@ -1,7 +1,10 @@
 package com.pinkunicorp.voicenumbers.ui.screens.training
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pinkunicorp.voicenumbers.data.model.NumberVariantState
+import com.pinkunicorp.voicenumbers.data.repository.SettingsRepository
 import com.pinkunicorp.voicenumbers.ui.elements.Key
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +15,7 @@ import kotlinx.coroutines.launch
 sealed class TrainingEvent {
     object GoToBack : TrainingEvent()
     object GoToSettings : TrainingEvent()
+    object NoneTypesForTrainings : TrainingEvent()
     data class PlayNumber(val number: Long) : TrainingEvent()
 }
 
@@ -27,20 +31,43 @@ sealed class TrainingFieldState {
     object Error : TrainingFieldState()
 }
 
-class TrainingViewModel : ViewModel() {
+class TrainingViewModel(val settingsRepository: SettingsRepository) : ViewModel() {
 
-    private var targetNumber = 0L
+    private var targetNumber: Long? = null
+    private var numberVariantForGenerate: List<NumberVariantState> = emptyList()
 
-    init {
+    fun onStart() {
         viewModelScope.launch {
             delay(1000)
-            targetNumber = generateNumber()
-            _uiState.update {
-                it.copy(
-                    events = it.events + TrainingEvent.PlayNumber(targetNumber)
-                )
+            val newStates = settingsRepository.getNumberVariantStates().filter { it.isEnable }
+            var needRegenerate = false
+            if (numberVariantForGenerate.isEmpty()) {
+                numberVariantForGenerate = newStates
+            } else {
+                if (numberVariantForGenerate != newStates) {
+                    numberVariantForGenerate = newStates
+                    needRegenerate = true
+                }
+            }
+            if (numberVariantForGenerate.isEmpty()) {
+                _uiState.update {
+                    it.copy(events = it.events + TrainingEvent.NoneTypesForTrainings)
+                }
+            } else {
+                if (targetNumber == null || needRegenerate) {
+                    targetNumber = generateNumber()
+                    _uiState.update {
+                        it.copy(
+                            events = it.events + TrainingEvent.PlayNumber(targetNumber!!)
+                        )
+                    }
+                }
             }
         }
+    }
+
+    fun onStop() {
+        Log.e("TRAINING", "onStop")
     }
 
     private val _uiState = MutableStateFlow(TrainingState())
@@ -118,7 +145,7 @@ class TrainingViewModel : ViewModel() {
                     it.copy(
                         currentNumber = "",
                         fieldState = TrainingFieldState.Normal,
-                        events = it.events + TrainingEvent.PlayNumber(targetNumber)
+                        events = it.events + TrainingEvent.PlayNumber(targetNumber!!)
                     )
                 }
             }
@@ -134,7 +161,7 @@ class TrainingViewModel : ViewModel() {
     fun onRepeatClick() {
         _uiState.update {
             it.copy(
-                events = it.events + TrainingEvent.PlayNumber(targetNumber)
+                events = it.events + TrainingEvent.PlayNumber(targetNumber!!)
             )
         }
     }

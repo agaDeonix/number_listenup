@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -30,14 +31,20 @@ import com.pinkunicorp.voicenumbers.ui.elements.NumbersKeyboard
 import com.pinkunicorp.voicenumbers.ui.elements.RepeatListeningButton
 import com.pinkunicorp.voicenumbers.ui.screens.Screen
 import org.koin.androidx.compose.get
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun TrainingScreen(
     navController: NavController,
-    trainingViewModel: TrainingViewModel = viewModel(),
+    trainingViewModel: TrainingViewModel = koinViewModel(),
     ttsService: TTSService = get()
 ) {
     val state by trainingViewModel.uiState.collectAsState()
+
+    DisposableEffect(key1 = trainingViewModel) {
+        trainingViewModel.onStart()
+        onDispose { trainingViewModel.onStop() }
+    }
 
     TrainingContent(
         state = state,

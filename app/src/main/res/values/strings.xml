@@ -15,10 +15,17 @@
     <string name="training_title">Training</string>
     <string name="training_correct">Correct!</string>
     <string name="training_incorrect">Incorrect!</string>
+
     <string name="settings_title">Settings</string>
-    <string name="settings_number_title_whole">Whole numbers</string>
-    <string name="settings_number_title_ordinal">Ordinal numbers</string>
-    <string name="settings_number_title_rational">Rational numbers</string>
-    <string name="settings_number_title_fraction">Fraction numbers</string>
-    <string name="settings_number_title_date">Dates</string>
+    <string name="settings_desc">Numeral types for trainings</string>
+    <string name="settings_number_whole_title">Whole numerals</string>
+    <string name="settings_number_whole_desc">numerals from 0 to 999\u0020999.</string>
+    <string name="settings_number_ordinal_title">Ordinal numerals</string>
+    <string name="settings_number_ordinal_desc">numerals from 0 to 999\u0020999.</string>
+    <string name="settings_number_rational_title">Rational numerals</string>
+    <string name="settings_number_rational_desc">numerals from 0 to 99 with before four digits after point.</string>
+    <string name="settings_number_fraction_title">Fraction numerals</string>
+    <string name="settings_number_fraction_desc">numerals from 1 to 999 in numerator and denominator.</string>
+    <string name="settings_number_date_title">Dates</string>
+    <string name="settings_number_date_desc">several types of dates like dates with BC and AD, and common dates like 2000, 1825 etc.</string>
 </resources>
