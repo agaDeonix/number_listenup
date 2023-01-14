@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pinkunicorp.voicenumbers.R
 import com.pinkunicorp.voicenumbers.other.tts.TTSService
@@ -65,6 +65,9 @@ fun TrainingScreen(
         onNumberKeyClick = { number ->
             trainingViewModel.onNumberKeyClick(number)
         },
+        onAnswerClick = {
+            trainingViewModel.onAnswerClick()
+        }
     )
     state.events.forEach {
         when (it) {
@@ -81,46 +84,11 @@ fun TrainingScreen(
 
 @Composable
 fun ShowErrorNoneSelectedTypes() {
-    Toast.makeText(LocalContext.current, R.string.settings_error_none_selected_types, Toast.LENGTH_SHORT).show()
-}
-
-fun getMediaItem(number: String): String? {
-    return when (number) {
-        "0" -> "zero"
-        "1" -> "one"
-        "2" -> "two"
-        "3" -> "three"
-        "4" -> "four"
-        "5" -> "five"
-        "6" -> "six"
-        "7" -> "seven"
-        "8" -> "eight"
-        "9" -> "nine"
-        "10" -> "ten"
-        "11" -> "eleven"
-        "12" -> "twelve"
-        "13" -> "thirteen"
-        "14" -> "fourteen"
-        "15" -> "fifteen"
-        "16" -> "sixteen"
-        "17" -> "seventeen"
-        "18" -> "eighteen"
-        "19" -> "nineteen"
-        "20" -> "twenty"
-        "30" -> "thirty"
-        "40" -> "fourty"
-        "50" -> "fifty"
-        "60" -> "sixty"
-        "70" -> "seventy"
-        "80" -> "eighty"
-        "90" -> "ninety"
-        "hundred" -> "hungred"
-        "thousand" -> "thousand"
-        "million" -> "million"
-        "billion" -> "billion"
-        "dot" -> "dot"
-        else -> null
-    }
+    Toast.makeText(
+        LocalContext.current,
+        R.string.settings_error_none_selected_types,
+        Toast.LENGTH_SHORT
+    ).show()
 }
 
 @Composable
@@ -192,6 +160,7 @@ fun TrainingContent(
     onSettingsClick: () -> Unit,
     onBackClick: () -> Unit,
     onRepeatClick: () -> Unit,
+    onAnswerClick: () -> Unit,
     onNumberKeyClick: (Key) -> Unit = {}
 ) {
     Column(
@@ -210,6 +179,24 @@ fun TrainingContent(
                 onClick = {
                     onRepeatClick()
                 })
+            Text(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .align(Alignment.CenterEnd)
+                    .background(
+                        color = Color.Blue,
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                    .clickable { onAnswerClick() }
+                    .padding(top = 4.dp, bottom = 6.dp)
+                    .padding(horizontal = 12.dp),
+                text = stringResource(id = R.string.training_answer),
+                style = TextStyle(
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            )
         }
         NumberFieldView(
             modifier = Modifier.padding(8.dp),
@@ -232,6 +219,7 @@ fun TrainingContentPreview() {
         ),
         onRepeatClick = {},
         onSettingsClick = {},
+        onAnswerClick = {},
         onBackClick = {}
     )
 }

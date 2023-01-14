@@ -207,6 +207,28 @@ class TrainingViewModel(private val settingsRepository: SettingsRepository) : Vi
         }
     }
 
+    fun onAnswerClick() {
+        viewModelScope.launch {
+            targetNumber?.let { target ->
+                _uiState.update {
+                    it.copy(
+                        currentNumber = target.getCorrectValue(),
+                        fieldState = TrainingFieldState.Correct
+                    )
+                }
+                delay(3000L)
+                targetNumber = generateNumber()
+                _uiState.update {
+                    it.copy(
+                        currentNumber = "",
+                        fieldState = TrainingFieldState.Normal,
+                        events = it.events + TrainingEvent.PlayNumber(targetNumber?.getTrainingValue() ?: "")
+                    )
+                }
+            }
+        }
+    }
+
     private fun showCorrect() {
         viewModelScope.launch {
             _uiState.update {

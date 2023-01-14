@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,12 +20,14 @@ fun RepeatListeningButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(IntrinsicSize.Max)
-            .clickable { onClick() },
+            .height(IntrinsicSize.Max),
         contentAlignment = Alignment.Center
     ) {
         Image(
             modifier = Modifier
+                .padding(24.dp)
+                .background(shape = RoundedCornerShape(12.dp), color = Color.LightGray)
+                .clickable { onClick() }
                 .padding(24.dp)
                 .height(54.dp)
                 .width(54.dp),
