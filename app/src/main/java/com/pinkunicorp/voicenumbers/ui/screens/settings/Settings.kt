@@ -138,7 +138,7 @@ private fun getNumberVariantNameId(type: NumberType): Int {
         NumberType.ORDINAL -> R.string.settings_number_ordinal_title
         NumberType.RATIONAL -> R.string.settings_number_rational_title
         NumberType.FRACTION -> R.string.settings_number_fraction_title
-        NumberType.DATE -> R.string.settings_number_date_title
+        NumberType.TIME -> R.string.settings_number_time_title
     }
 }
 
@@ -148,7 +148,7 @@ private fun getNumberVariantDescId(type: NumberType): Int {
         NumberType.ORDINAL -> R.string.settings_number_ordinal_desc
         NumberType.RATIONAL -> R.string.settings_number_rational_desc
         NumberType.FRACTION -> R.string.settings_number_fraction_desc
-        NumberType.DATE -> R.string.settings_number_date_desc
+        NumberType.TIME -> R.string.settings_number_time_desc
     }
 }
 

@@ -3,9 +3,7 @@
 
     <string name="home_app_name">Numbers Lintening App</string>
     <string name="home_best_score_title">Best Score</string>
-    <string name="home_challenge">Challenge</string>
-    <string name="home_training">Training</string>
-    <string name="home_leaderboard">Leaderboard</string>
+    <string name="home_start">Start</string>
 
     <string name="score_best_score_title">Best score</string>
     <string name="score_current_score_title">Score</string>
@@ -26,8 +24,8 @@
     <string name="settings_number_rational_desc">numerals from 0 to 99 with before four digits after point.</string>
     <string name="settings_number_fraction_title">Fraction numerals</string>
     <string name="settings_number_fraction_desc">numerals from 1 to 999 in numerator and denominator.</string>
-    <string name="settings_number_date_title">Dates</string>
-    <string name="settings_number_date_desc">several types of dates like dates with BC and AD, and common dates like 2000, 1825 etc.</string>
+    <string name="settings_number_time_title">Time</string>
+    <string name="settings_number_time_desc">several variants of time.</string>
     <string name="settings_error_none_selected_types">"None selected types for training "</string>
     <string name="training_answer">answer</string>
 </resources>

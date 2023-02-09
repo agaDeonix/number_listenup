@@ -91,50 +91,17 @@ fun HomeContent(state: HomeState, onTrainingNavigation: () -> Unit) {
             Button(
                 modifier = Modifier
                     .fillMaxWidth(),
-                onClick = { /*TODO*/ },
-                enabled = false
-            ) {
-                Text(
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    text = stringResource(id = R.string.home_challenge),
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                )
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth(),
                 onClick = { onTrainingNavigation() }
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 20.dp),
-                    text = stringResource(id = R.string.home_training),
+                    text = stringResource(id = R.string.home_start),
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium
                     )
                 )
             }
-            Spacer(modifier = Modifier.height(20.dp))
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                onClick = { /*TODO*/ },
-                enabled = false
-            ) {
-                Text(
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    text = stringResource(id = R.string.home_leaderboard),
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                )
-            }
-            Spacer(modifier = Modifier.height(100.dp))
 
         }
     }

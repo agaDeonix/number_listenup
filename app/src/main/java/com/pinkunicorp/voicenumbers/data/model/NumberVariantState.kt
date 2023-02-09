@@ -7,5 +7,5 @@ enum class NumberType {
     ORDINAL,
     RATIONAL,
     FRACTION,
-    DATE
+    TIME
 }

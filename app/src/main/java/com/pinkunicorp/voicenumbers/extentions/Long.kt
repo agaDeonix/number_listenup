@@ -1,6 +1,6 @@
 package com.pinkunicorp.voicenumbers.extentions
 
-fun getMediaItem(number: String): String? {
+private fun getStringValue(number: String): String? {
     return when (number) {
         "0" -> "zero"
         "1" -> "one"
@@ -32,222 +32,126 @@ fun getMediaItem(number: String): String? {
         "90" -> "ninety"
         "hundred" -> "hungred"
         "thousand" -> "thousand"
-        "million" -> "million"
-        "billion" -> "billion"
         "dot" -> "dot"
         else -> null
     }
 }
 
-fun Long.toWholeNumberString(): String {
-    val listMediaPlayer = mutableListOf<String?>()
-    val billion = this / 1000000000
-    val million = (this - billion * 1000000000) / 1000000
-    val thousand = (this - billion * 1000000000 - million * 1000000) / 1000
-    val hundred =
-        (this - billion * 1000000000 - million * 1000000 - thousand * 1000) / 100
-    val ten = if (this % 100 <= 20) 0 else
-        (this - billion * 1000000000 - million * 1000000 - thousand * 1000 - hundred * 100) / 10
-    val one = if (this % 100 <= 20) this % 100 else
-        this - billion * 1000000000 - million * 1000000 - thousand * 1000 - hundred * 100 - ten * 10
-
-    if (billion > 0) {
-        val billionHundreds = billion / 100
-        val billionTens =
-            if (billion % 100 <= 20) 0 else (billion - billionHundreds * 100) / 10
-        val billionOnes =
-            if (billion % 100 <= 20) billion % 100 else billion - billionHundreds * 100 - billionTens * 10
-
-        if (billionHundreds > 0) {
-            listMediaPlayer.add(
-                getMediaItem(
-                    billionHundreds.toString()
-                )
-            )
-            listMediaPlayer.add(getMediaItem("hundred"))
-        }
-        if (billionTens > 0) {
-            listMediaPlayer.add(
-                getMediaItem(
-                    (billionTens * 10).toString()
-                )
-            )
-        }
-        if (billionOnes > 0) {
-            listMediaPlayer.add(getMediaItem(billionOnes.toString()))
-        }
-        listMediaPlayer.add(getMediaItem("billion"))
+private fun getOrdinalStringValue(number: String): String? {
+    return when (number) {
+        "0" -> "zero"
+        "1" -> "first"
+        "2" -> "second"
+        "3" -> "third"
+        "4" -> "fourth"
+        "5" -> "fifth"
+        "6" -> "sixth"
+        "7" -> "seventh"
+        "8" -> "eighth"
+        "9" -> "ninth"
+        "10" -> "tenth"
+        "11" -> "eleventh"
+        "12" -> "twelfth"
+        "13" -> "thirteenth"
+        "14" -> "fourteenth"
+        "15" -> "fifteenth"
+        "16" -> "sixteenth"
+        "17" -> "seventeenth"
+        "18" -> "eighteenth"
+        "19" -> "nineteenth"
+        "20" -> "twentieth"
+        "30" -> "thirtieth"
+        "40" -> "fortieth"
+        "50" -> "fiftieth"
+        "60" -> "sixtieth"
+        "70" -> "seventieth"
+        "80" -> "eightieth"
+        "90" -> "ninetieth"
+        "hundred" -> "hungredth"
+        "thousand" -> "thousandth"
+        "dot" -> "dot"
+        else -> null
     }
-    if (million > 0) {
-        val millionHundreds = million / 100
-        val millionTens =
-            if (million % 100 <= 20) 0 else (million - millionHundreds * 100) / 10
-        val millionOnes =
-            if (million % 100 <= 20) million % 100 else million - millionHundreds * 100 - millionTens * 10
+}
 
-        if (millionHundreds > 0) {
-            listMediaPlayer.add(
-                getMediaItem(
-                    millionHundreds.toString()
-                )
-            )
-            listMediaPlayer.add(getMediaItem("hundred"))
-        }
-        if (millionTens > 0) {
-            listMediaPlayer.add(
-                getMediaItem(
-                    (millionTens * 10).toString()
-                )
-            )
-        }
-        if (millionOnes > 0) {
-            listMediaPlayer.add(getMediaItem(millionOnes.toString()))
-        }
-        listMediaPlayer.add(getMediaItem("million"))
+fun Long.toWholeNumberString(needUseAnd: Boolean = true): String {
+    if (this > 999_999L) {
+        throw Exception("Number is too big")
     }
+    val values = mutableListOf<String?>()
+    val thousand = this / 1000
+    val hundred = (this - thousand * 1000) / 100
+    val tens = this % 100
+    val ten = if (tens <= 20) 0 else (this - thousand * 1000 - hundred * 100) / 10
+    val one = if (tens <= 20) tens else this - thousand * 1000 - hundred * 100 - ten * 10
+
     if (thousand > 0) {
-        val thousandHundreds = thousand / 100
-        val thousandTens =
-            if (thousand % 100 <= 20) 0 else (thousand - thousandHundreds * 100) / 10
-        val thousandOnes =
-            if (thousand % 100 <= 20) thousand % 100 else thousand - thousandHundreds * 100 - thousandTens * 10
-
-        if (thousandHundreds > 0) {
-            listMediaPlayer.add(
-                getMediaItem(
-                    thousandHundreds.toString()
-                )
-            )
-            listMediaPlayer.add(getMediaItem("hundred"))
-        }
-        if (thousandTens > 0) {
-            listMediaPlayer.add(
-                getMediaItem(
-                    (thousandTens * 10).toString()
-                )
-            )
-        }
-        if (thousandOnes > 0) {
-            listMediaPlayer.add(getMediaItem(thousandOnes.toString()))
-        }
-        listMediaPlayer.add(getMediaItem("thousand"))
+        values.add(thousand.toWholeNumberString(false))
+        values.add(getStringValue("thousand"))
     }
     if (hundred > 0) {
-        listMediaPlayer.add(getMediaItem(hundred.toString()))
-        listMediaPlayer.add(getMediaItem("hundred"))
+        values.add(getStringValue(hundred.toString()))
+        values.add(getStringValue("hundred"))
+    }
+    if (ten > 0 || one > 0 && needUseAnd) {
+        if (values.isNotEmpty()) {
+            values.add("and")
+        }
     }
     if (ten > 0) {
-        listMediaPlayer.add(getMediaItem((ten * 10).toString()))
+        if (one > 0) {
+            values.add(getStringValue((ten * 10).toString()) + "-" + getStringValue(one.toString()))
+        } else {
+            values.add(getStringValue((ten * 10).toString()))
+        }
     }
-    if (one > 0) {
-        listMediaPlayer.add(getMediaItem(one.toString()))
+    if (ten == 0L && one > 0L || (this == 0L)) {
+        values.add(getStringValue(one.toString()))
     }
-    return listMediaPlayer.filterNotNull().joinToString(" ")
+    return values.filterNotNull().joinToString(" ")
 }
 
 fun Long.toOrdinalNumberString(): String {
-    //FIXME need rework
-    val listMediaPlayer = mutableListOf<String?>()
-    val billion = this / 1000000000
-    val million = (this - billion * 1000000000) / 1000000
-    val thousand = (this - billion * 1000000000 - million * 1000000) / 1000
-    val hundred =
-        (this - billion * 1000000000 - million * 1000000 - thousand * 1000) / 100
-    val ten = if (this % 100 <= 20) 0 else
-        (this - billion * 1000000000 - million * 1000000 - thousand * 1000 - hundred * 100) / 10
-    val one = if (this % 100 <= 20) this % 100 else
-        this - billion * 1000000000 - million * 1000000 - thousand * 1000 - hundred * 100 - ten * 10
-
-    if (billion > 0) {
-        val billionHundreds = billion / 100
-        val billionTens =
-            if (billion % 100 <= 20) 0 else (billion - billionHundreds * 100) / 10
-        val billionOnes =
-            if (billion % 100 <= 20) billion % 100 else billion - billionHundreds * 100 - billionTens * 10
-
-        if (billionHundreds > 0) {
-            listMediaPlayer.add(
-                getMediaItem(
-                    billionHundreds.toString()
-                )
-            )
-            listMediaPlayer.add(getMediaItem("hundred"))
-        }
-        if (billionTens > 0) {
-            listMediaPlayer.add(
-                getMediaItem(
-                    (billionTens * 10).toString()
-                )
-            )
-        }
-        if (billionOnes > 0) {
-            listMediaPlayer.add(getMediaItem(billionOnes.toString()))
-        }
-        listMediaPlayer.add(getMediaItem("billion"))
+    if (this > 999_999L) {
+        throw Exception("Number is too big")
     }
-    if (million > 0) {
-        val millionHundreds = million / 100
-        val millionTens =
-            if (million % 100 <= 20) 0 else (million - millionHundreds * 100) / 10
-        val millionOnes =
-            if (million % 100 <= 20) million % 100 else million - millionHundreds * 100 - millionTens * 10
+    val values = mutableListOf<String?>()
+    val thousand = this / 1000
+    val hundred = (this - thousand * 1000) / 100
+    val tens = this % 100
+    val ten = if (tens <= 20) 0 else (this - thousand * 1000 - hundred * 100) / 10
+    val one = if (tens <= 20) tens else this - thousand * 1000 - hundred * 100 - ten * 10
 
-        if (millionHundreds > 0) {
-            listMediaPlayer.add(
-                getMediaItem(
-                    millionHundreds.toString()
-                )
-            )
-            listMediaPlayer.add(getMediaItem("hundred"))
-        }
-        if (millionTens > 0) {
-            listMediaPlayer.add(
-                getMediaItem(
-                    (millionTens * 10).toString()
-                )
-            )
-        }
-        if (millionOnes > 0) {
-            listMediaPlayer.add(getMediaItem(millionOnes.toString()))
-        }
-        listMediaPlayer.add(getMediaItem("million"))
-    }
     if (thousand > 0) {
-        val thousandHundreds = thousand / 100
-        val thousandTens =
-            if (thousand % 100 <= 20) 0 else (thousand - thousandHundreds * 100) / 10
-        val thousandOnes =
-            if (thousand % 100 <= 20) thousand % 100 else thousand - thousandHundreds * 100 - thousandTens * 10
-
-        if (thousandHundreds > 0) {
-            listMediaPlayer.add(
-                getMediaItem(
-                    thousandHundreds.toString()
-                )
-            )
-            listMediaPlayer.add(getMediaItem("hundred"))
+        values.add(thousand.toWholeNumberString(false))
+        if (hundred == 0L && ten == 0L && one == 0L) {
+            values.add(getOrdinalStringValue("thousand"))
+        } else {
+            values.add(getStringValue("thousand"))
         }
-        if (thousandTens > 0) {
-            listMediaPlayer.add(
-                getMediaItem(
-                    (thousandTens * 10).toString()
-                )
-            )
-        }
-        if (thousandOnes > 0) {
-            listMediaPlayer.add(getMediaItem(thousandOnes.toString()))
-        }
-        listMediaPlayer.add(getMediaItem("thousand"))
     }
     if (hundred > 0) {
-        listMediaPlayer.add(getMediaItem(hundred.toString()))
-        listMediaPlayer.add(getMediaItem("hundred"))
+        values.add(getStringValue(hundred.toString()))
+        if (ten == 0L && one == 0L) {
+            values.add(getOrdinalStringValue("hundred"))
+        } else {
+            values.add(getStringValue("hundred"))
+        }
+    }
+    if (ten > 0 || one > 0) {
+        if (values.isNotEmpty()) {
+            values.add("and")
+        }
     }
     if (ten > 0) {
-        listMediaPlayer.add(getMediaItem((ten * 10).toString()))
+        if (one == 0L) {
+            values.add(getOrdinalStringValue((ten * 10).toString()))
+        } else {
+            values.add(getStringValue((ten * 10).toString()))
+        }
     }
-    if (one > 0) {
-        listMediaPlayer.add(getMediaItem(one.toString()))
+    if (one > 0 || (this == 0L)) {
+        values.add(getOrdinalStringValue(one.toString()))
     }
-    return listMediaPlayer.filterNotNull().joinToString(" ")
+    return values.filterNotNull().joinToString(" ")
 }

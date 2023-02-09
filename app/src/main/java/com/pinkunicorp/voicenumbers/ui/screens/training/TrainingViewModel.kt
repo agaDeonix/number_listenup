@@ -7,7 +7,8 @@ import com.pinkunicorp.voicenumbers.data.model.NumberType
 import com.pinkunicorp.voicenumbers.data.model.NumberVariantState
 import com.pinkunicorp.voicenumbers.data.repository.SettingsRepository
 import com.pinkunicorp.voicenumbers.extentions.toOrdinalNumberString
-import com.pinkunicorp.voicenumbers.extentions.toRationalString
+import com.pinkunicorp.voicenumbers.extentions.toRationalAndString
+import com.pinkunicorp.voicenumbers.extentions.toRationalPointString
 import com.pinkunicorp.voicenumbers.extentions.toWholeNumberString
 import com.pinkunicorp.voicenumbers.ui.elements.Key
 import kotlinx.coroutines.delay
@@ -37,33 +38,88 @@ sealed class TrainingFieldState {
 
 class TrainingViewModel(private val settingsRepository: SettingsRepository) : ViewModel() {
 
-    sealed class TrainingNumber(val type: NumberType) {
-        data class WholeNumber(val number: Long) : TrainingNumber(NumberType.WHOLE) {
+    sealed class TrainingNumber {
+        data class WholeNumber(val number: Long) : TrainingNumber() {
             override fun getTrainingValue() = number.toWholeNumberString()
             override fun getCorrectValue() = number.toString()
         }
 
-        data class OrdinalNumber(val number: Long) : TrainingNumber(NumberType.ORDINAL) {
+        data class OrdinalNumber(val number: Long) : TrainingNumber() {
             override fun getTrainingValue() = number.toOrdinalNumberString()
             override fun getCorrectValue() = number.toString()
         }
 
-        data class RationalNumber(val number: Float) : TrainingNumber(NumberType.RATIONAL) {
-            override fun getTrainingValue() = number.toRationalString()
+        data class RationalNumber(val number: Float) : TrainingNumber() {
+            override fun getTrainingValue() = when ((0..1).random()) {
+                0 -> number.toRationalAndString()
+                else -> number.toRationalPointString()
+            }
+
             override fun getCorrectValue() = number.toString()
         }
 
-        data class FractionNumber(val numerator: Long, val denominator: Long) :
-            TrainingNumber(NumberType.FRACTION) {
-            override fun getTrainingValue() =
-                numerator.toWholeNumberString() + " " + denominator.toOrdinalNumberString()
+        data class FractionNumber(val whole: Long, val numerator: Long, val denominator: Long) :
+            TrainingNumber() {
+            override fun getTrainingValue(): String {
+                var result = ""
+                if (whole > 0L) {
+                    result = whole.toWholeNumberString() + " and "
+                }
+                if (numerator == 1L) {
+                    result += when (denominator) {
+                        2L -> "a half"
+                        4L -> "a quarter"
+                        else -> "a " + denominator.toOrdinalNumberString()
+                    }
+                } else {
+                    result += numerator.toWholeNumberString() + " " + denominator.toOrdinalNumberString()
+                }
+                return result
+            }
 
-            override fun getCorrectValue() = "$numerator/$denominator"
+            override fun getCorrectValue() = "$whole $numerator/$denominator"
         }
 
-        data class DateNumber(val date: Long) : TrainingNumber(NumberType.DATE) {
-            override fun getTrainingValue() = date.toString()//FIXME need rework
-            override fun getCorrectValue() = date.toString()
+        data class TimeNumber(val hour: Long, val minute: Long) : TrainingNumber() {
+            override fun getTrainingValue() = getTimeTrainingValue(hour, minute)
+
+            private fun getTimeTrainingValue(hour: Long, minute: Long): String {
+                if (minute == 0L) {
+                    return hour.toWholeNumberString() + " hundred" + " hours"
+                } else {
+                    if (minute < 30) {
+                        if (minute == 15L) {
+                            return "quarter past " + hour.toWholeNumberString()
+                        } else {
+                            if (minute == 1L) {
+                                return "one minute past " + hour.toWholeNumberString()
+                            } else if (minute <= 5L) {
+                                return minute.toWholeNumberString() + " minutes past " + hour.toWholeNumberString()
+                            }
+                            return minute.toWholeNumberString() + " past " + hour.toWholeNumberString()
+                        }
+                    } else if (minute > 30L) {
+                        if (minute == 45L) {
+                            return "quarter to " + (hour + 1).toWholeNumberString()
+                        } else {
+                            if (minute == 59L) {
+                                return "one minute to " + (hour + 1).toWholeNumberString()
+                            } else if (minute >= 55L) {
+                                return (60 - minute).toWholeNumberString() + " minutes to " + (hour + 1).toWholeNumberString()
+                            }
+                            return (60 - minute).toWholeNumberString() + " to " + (hour + 1).toWholeNumberString()
+                        }
+                    } else {
+                        return "half past " + hour.toWholeNumberString()
+                    }
+                }
+            }
+
+            override fun getCorrectValue(): String {
+                val hourString = if (hour < 10) "0$hour" else hour.toString()
+                val minuteString = if (minute < 10) "0$minute" else minute.toString()
+                return "$hourString:$minuteString"
+            }
         }
 
         abstract fun getTrainingValue(): String
@@ -121,10 +177,11 @@ class TrainingViewModel(private val settingsRepository: SettingsRepository) : Vi
             NumberType.ORDINAL -> TrainingNumber.OrdinalNumber(generateLong())
             NumberType.RATIONAL -> TrainingNumber.RationalNumber(generateFloat())
             NumberType.FRACTION -> TrainingNumber.FractionNumber(
+                (0L..999L).random(),
                 (1L..999L).random(),
                 (1L..999L).random()
             )
-            NumberType.DATE -> TrainingNumber.DateNumber((1L..9999L).random())
+            NumberType.TIME -> TrainingNumber.TimeNumber((0L..23L).random(), (0L..59L).random())
         }
 
     }
@@ -222,7 +279,9 @@ class TrainingViewModel(private val settingsRepository: SettingsRepository) : Vi
                     it.copy(
                         currentNumber = "",
                         fieldState = TrainingFieldState.Normal,
-                        events = it.events + TrainingEvent.PlayNumber(targetNumber?.getTrainingValue() ?: "")
+                        events = it.events + TrainingEvent.PlayNumber(
+                            targetNumber?.getTrainingValue() ?: ""
+                        )
                     )
                 }
             }
@@ -242,7 +301,9 @@ class TrainingViewModel(private val settingsRepository: SettingsRepository) : Vi
                 it.copy(
                     currentNumber = "",
                     fieldState = TrainingFieldState.Normal,
-                    events = it.events + TrainingEvent.PlayNumber(targetNumber?.getTrainingValue() ?: "")
+                    events = it.events + TrainingEvent.PlayNumber(
+                        targetNumber?.getTrainingValue() ?: ""
+                    )
                 )
             }
         }
