@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">Voice Numbers</string>
+    <string name="app_name">Number ListenUp</string>
 
-    <string name="home_app_name">Numbers Lintening App</string>
-    <string name="home_best_score_title">Best Score</string>
+    <string name="home_app_name">Number ListenUp App</string>
+    <string name="home_score_title">Your score</string>
     <string name="home_start">Start</string>
 
     <string name="score_best_score_title">Best score</string>
