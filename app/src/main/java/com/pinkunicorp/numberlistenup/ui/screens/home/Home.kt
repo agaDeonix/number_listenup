@@ -21,6 +21,10 @@ import androidx.navigation.NavController
 import com.pinkunicorp.numberlistenup.ui.screens.Screen
 import org.koin.androidx.compose.koinViewModel
 import com.pinkunicorp.numberlistenup.R
+import com.pinkunicorp.numberlistenup.ui.elements.Key
+import com.pinkunicorp.numberlistenup.ui.elements.MainButton
+import com.pinkunicorp.numberlistenup.ui.elements.NumbersKeyboardButton
+import com.pinkunicorp.numberlistenup.ui.elements.NumbersKeyboardTextButton
 
 @Composable
 fun HomeScreen(
@@ -80,21 +84,24 @@ fun HomeContent(state: HomeState, onTrainingNavigation: () -> Unit) {
                 .fillMaxHeight(),
             verticalArrangement = Arrangement.Center,
         ) {
-            Button(
+            NumbersKeyboardButton(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                onClick = { onTrainingNavigation() }
-            ) {
-                Text(
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    text = stringResource(id = R.string.home_start),
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium
+                    .fillMaxWidth()
+                    .padding(top = 20.dp),
+                content = {
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 40.dp)
+                            .padding(vertical = 10.dp),
+                        text = stringResource(id = R.string.home_start),
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Medium
+                        )
                     )
-                )
-            }
-
+                },
+                onClick = { onTrainingNavigation() }
+            )
         }
     }
 }

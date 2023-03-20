@@ -145,6 +145,22 @@ fun NumbersKeyboardTextButton(modifier: Modifier = Modifier, text: String, onCli
 }
 
 @Composable
+fun NumbersKeyboardButton(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .clickable { onClick() }
+            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(12.dp)),
+        contentAlignment = Alignment.Center
+    ) {
+        content()
+    }
+}
+
+@Composable
 fun NumbersKeyboardImageButton(modifier: Modifier = Modifier, @DrawableRes imageId: Int, onClick: () -> Unit) {
     Box(
         modifier = modifier
