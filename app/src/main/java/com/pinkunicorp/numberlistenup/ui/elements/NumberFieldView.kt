@@ -24,12 +24,13 @@ fun NumberFieldView(
     isCorrect: Boolean,
     hasError: Boolean,
 ) {
-
-    val textColor = if (isCorrect) Color.Green else if (hasError) Color.Red else Color.Black
-    val borderWidth = if (isCorrect || hasError) 2.dp else 1.dp
+    val textColor = if (isCorrect) Color.Black else if (hasError) Color.White else Color.Black
+    val backgroundColor = if (isCorrect) Color.White else if (hasError) Color.Black else Color.White
+    val borderWidth = if (isCorrect || hasError) 3.dp else 1.dp
     Box(
         modifier = modifier
             .border(width = borderWidth, color = textColor, shape = RoundedCornerShape(12.dp))
+            .background(backgroundColor, shape = RoundedCornerShape(12.dp))
             .fillMaxWidth(),
         contentAlignment = Alignment.CenterStart
     ) {

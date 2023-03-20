@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Checkbox
-import androidx.compose.material.Divider
+import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,10 +24,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.pinkunicorp.numberlistenup.R
 import com.pinkunicorp.numberlistenup.data.model.NumberType
 import com.pinkunicorp.numberlistenup.data.model.NumberVariantState
 import org.koin.androidx.compose.koinViewModel
-import com.pinkunicorp.numberlistenup.R
 
 @Composable
 fun SettingsScreen(
@@ -104,9 +104,14 @@ fun NumberVariantView(
             },
         verticalAlignment = Alignment.Top
     ) {
-        Checkbox(checked = numberVariantState.isEnable, onCheckedChange = {
-            onCheckedChange(!numberVariantState.isEnable)
-        })
+        Checkbox(
+            checked = numberVariantState.isEnable, onCheckedChange = {
+                onCheckedChange(!numberVariantState.isEnable)
+            },
+            colors = CheckboxDefaults.colors(
+                checkedColor = Color.Black,
+            )
+        )
         Column(
             modifier = Modifier
                 .padding(top = 12.dp)
@@ -187,13 +192,6 @@ fun SettingsToolbarView(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
-        )
-
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .align(Alignment.BottomCenter)
         )
     }
 }

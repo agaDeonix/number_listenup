@@ -5,13 +5,18 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
@@ -33,11 +38,12 @@ sealed class Key {
 
 @Composable
 fun NumbersKeyboard(modifier: Modifier = Modifier, onNumberClick: (Key) -> Unit) {
-    Row(modifier = modifier
-        .padding(bottom = 4.dp)
-        .padding(horizontal = 4.dp)
-        .fillMaxWidth()
-        .height(IntrinsicSize.Min)
+    Row(
+        modifier = modifier
+            .padding(bottom = 4.dp)
+            .padding(horizontal = 4.dp)
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
     ) {
         Column(
             modifier = Modifier
@@ -127,52 +133,72 @@ fun NumbersKeyboard(modifier: Modifier = Modifier, onNumberClick: (Key) -> Unit)
 
 @Composable
 fun NumbersKeyboardTextButton(modifier: Modifier = Modifier, text: String, onClick: () -> Unit) {
-    Box(
-        modifier = modifier
-            .clickable { onClick() }
-            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(12.dp)),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            style = TextStyle(
-                color = Color.Black,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+    NumbersKeyboardButton(
+        modifier = modifier,
+        onClick = onClick,
+        content = {
+            val color = if (it) Color.White else Color.Black
+            Text(
+                text = text,
+                style = TextStyle(
+                    color = color,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
             )
-        )
-    }
+        }
+    )
 }
 
 @Composable
 fun NumbersKeyboardButton(
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
+    backgroundColor: Color = Color.White,
+    contentColor: Color = Color.Black,
+    content: @Composable (isPressed: Boolean) -> Unit,
     onClick: () -> Unit
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val backgroundColorPressed = if (!isPressed) contentColor else backgroundColor
+    val contentColorPressed = if (isPressed) contentColor else backgroundColor
     Box(
         modifier = modifier
-            .clickable { onClick() }
-            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(12.dp)),
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = { onClick() }
+            )
+            .background(color = contentColorPressed, shape = RoundedCornerShape(12.dp))
+            .border(
+                width = 1.dp,
+                color = backgroundColorPressed,
+                shape = RoundedCornerShape(12.dp)
+            ),
         contentAlignment = Alignment.Center
     ) {
-        content()
+        content(isPressed)
     }
 }
 
 @Composable
-fun NumbersKeyboardImageButton(modifier: Modifier = Modifier, @DrawableRes imageId: Int, onClick: () -> Unit) {
-    Box(
-        modifier = modifier
-            .clickable { onClick() }
-            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(12.dp)),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            imageVector = ImageVector.vectorResource(id = imageId),
-            contentDescription = ""
-        )
-    }
+fun NumbersKeyboardImageButton(
+    modifier: Modifier = Modifier,
+    @DrawableRes imageId: Int,
+    onClick: () -> Unit
+) {
+    NumbersKeyboardButton(
+        modifier = modifier,
+        onClick = onClick,
+        content = {
+            val color = if (it) Color.White else Color.Black
+            Image(
+                imageVector = ImageVector.vectorResource(id = imageId),
+                contentDescription = "",
+                colorFilter = ColorFilter.tint(color),
+            )
+        }
+    )
 }
 
 @Preview

@@ -2,7 +2,6 @@ package com.pinkunicorp.numberlistenup.ui.screens.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,13 +17,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.pinkunicorp.numberlistenup.R
+import com.pinkunicorp.numberlistenup.ui.elements.NumbersKeyboardButton
 import com.pinkunicorp.numberlistenup.ui.screens.Screen
 import org.koin.androidx.compose.koinViewModel
-import com.pinkunicorp.numberlistenup.R
-import com.pinkunicorp.numberlistenup.ui.elements.Key
-import com.pinkunicorp.numberlistenup.ui.elements.MainButton
-import com.pinkunicorp.numberlistenup.ui.elements.NumbersKeyboardButton
-import com.pinkunicorp.numberlistenup.ui.elements.NumbersKeyboardTextButton
 
 @Composable
 fun HomeScreen(
@@ -89,11 +85,13 @@ fun HomeContent(state: HomeState, onTrainingNavigation: () -> Unit) {
                     .fillMaxWidth()
                     .padding(top = 20.dp),
                 content = {
+                    val color = if (it) Color.White else Color.Black
                     Text(
                         modifier = Modifier
                             .padding(horizontal = 40.dp)
                             .padding(vertical = 10.dp),
                         text = stringResource(id = R.string.home_start),
+                        color = color,
                         style = TextStyle(
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Medium

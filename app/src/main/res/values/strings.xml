@@ -13,6 +13,7 @@
     <string name="training_title">Training</string>
     <string name="training_correct">Correct!</string>
     <string name="training_incorrect">Incorrect!</string>
+    <string name="training_answer">answer</string>
 
     <string name="settings_title">Settings</string>
     <string name="settings_desc">Numeral types for trainings</string>
@@ -27,5 +28,4 @@
     <string name="settings_number_time_title">Time</string>
     <string name="settings_number_time_desc">several variants of time.</string>
     <string name="settings_error_none_selected_types">"None selected types for training "</string>
-    <string name="training_answer">answer</string>
 </resources>

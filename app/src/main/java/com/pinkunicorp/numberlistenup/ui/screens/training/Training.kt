@@ -8,13 +8,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -27,10 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.pinkunicorp.numberlistenup.R
 import com.pinkunicorp.numberlistenup.other.tts.TTSService
-import com.pinkunicorp.numberlistenup.ui.elements.Key
-import com.pinkunicorp.numberlistenup.ui.elements.NumberFieldView
-import com.pinkunicorp.numberlistenup.ui.elements.NumbersKeyboard
-import com.pinkunicorp.numberlistenup.ui.elements.RepeatListeningButton
+import com.pinkunicorp.numberlistenup.ui.elements.*
 import com.pinkunicorp.numberlistenup.ui.screens.Screen
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -146,13 +143,6 @@ fun TrainingToolbarView(
                 contentDescription = ""
             )
         }
-
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .align(Alignment.BottomCenter)
-        )
     }
 }
 
@@ -175,29 +165,40 @@ fun TrainingContent(
             onSettingsClick = onSettingsClick,
             onBackClick = onBackClick
         )
-        Box(modifier = Modifier.weight(1f)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
             RepeatListeningButton(
-                modifier = Modifier.fillMaxHeight(),
+                modifier = Modifier
+                    .height(125.dp)
+                    .align(Alignment.Center),
                 onClick = {
                     onRepeatClick()
                 })
-            Text(
+            NumbersKeyboardButton(
                 modifier = Modifier
                     .padding(8.dp)
-                    .align(Alignment.CenterEnd)
-                    .background(
-                        color = Color.Blue,
-                        shape = RoundedCornerShape(12.dp)
+                    .align(Alignment.CenterEnd),
+                backgroundColor = Color.Black,
+                contentColor = Color.White,
+                content = {
+                    val color = if (it) Color.Black else Color.White
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(top = 4.dp, bottom = 6.dp)
+                            .padding(horizontal = 12.dp),
+                        text = stringResource(id = R.string.training_answer),
+                        style = TextStyle(
+                            color = color,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     )
-                    .clickable { onAnswerClick() }
-                    .padding(top = 4.dp, bottom = 6.dp)
-                    .padding(horizontal = 12.dp),
-                text = stringResource(id = R.string.training_answer),
-                style = TextStyle(
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                },
+                onClick = { onAnswerClick() }
             )
         }
         Box {
@@ -209,11 +210,11 @@ fun TrainingContent(
                         || state.fieldState is TrainingFieldState.Answer
             )
             if (state.fieldState is TrainingFieldState.Correct) {
-                val animColor = remember { Animatable(Color.Green) }
+                val animColor = remember { Animatable(Color.Black) }
                 val yPos = remember { Animatable(0f) }
                 LaunchedEffect(true) {
                     awaitAll(
-                        async { animColor.animateTo(Color.Green.copy(alpha = 0f), tween(1000)) },
+                        async { animColor.animateTo(Color.Black.copy(alpha = 0f), tween(1000)) },
                         async { yPos.animateTo(-40f, tween(1000)) }
                     )
                 }
@@ -230,6 +231,29 @@ fun TrainingContent(
                         fontSize = 40.sp,
                         fontWeight = FontWeight.Bold
                     )
+                )
+            }
+            if (state.fieldState is TrainingFieldState.Error) {
+                val animColor = remember { Animatable(Color.White) }
+                val yPos = remember { Animatable(0f) }
+                LaunchedEffect(true) {
+                    awaitAll(
+                        async { animColor.animateTo(Color.Black.copy(alpha = 0f), tween(1000)) },
+                        async { yPos.animateTo(-40f, tween(1000)) }
+                    )
+                }
+                Image(
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(60.dp)
+                        .padding(bottom = 8.dp)
+                        .align(Alignment.CenterEnd)
+                        .padding(top = 4.dp, bottom = 6.dp)
+                        .padding(horizontal = 12.dp)
+                        .absoluteOffset(y = yPos.value.dp),
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_error),
+                    contentDescription = "",
+                    colorFilter = ColorFilter.tint(animColor.value)
                 )
             }
         }
