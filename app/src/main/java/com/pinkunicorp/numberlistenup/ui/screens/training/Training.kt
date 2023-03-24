@@ -8,12 +8,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -29,6 +27,7 @@ import com.pinkunicorp.numberlistenup.R
 import com.pinkunicorp.numberlistenup.other.tts.TTSService
 import com.pinkunicorp.numberlistenup.ui.elements.*
 import com.pinkunicorp.numberlistenup.ui.screens.Screen
+import com.pinkunicorp.numberlistenup.ui.theme.AppTheme
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import org.koin.androidx.compose.get
@@ -100,7 +99,7 @@ fun TrainingToolbarView(
         modifier = modifier
             .height(54.dp)
             .fillMaxWidth()
-            .background(Color.White)
+            .background(AppTheme.colors.background)
     ) {
         Box(
             modifier = Modifier
@@ -114,18 +113,16 @@ fun TrainingToolbarView(
                     .fillMaxSize()
                     .padding(8.dp),
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_back),
-                contentDescription = ""
+                contentDescription = "",
+                colorFilter = ColorFilter.tint(AppTheme.colors.mainContent)
             )
         }
 
         Text(
             text = stringResource(id = R.string.training_title),
             modifier = Modifier.align(Alignment.Center),
-            style = TextStyle(
-                color = Color.Black,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
+            style = AppTheme.typography.textBold,
+            color = AppTheme.colors.mainContent,
         )
 
         Box(
@@ -140,7 +137,8 @@ fun TrainingToolbarView(
                     .fillMaxSize()
                     .padding(8.dp),
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_settings),
-                contentDescription = ""
+                contentDescription = "",
+                colorFilter = ColorFilter.tint(AppTheme.colors.mainContent)
             )
         }
     }
@@ -157,7 +155,7 @@ fun TrainingContent(
 ) {
     Column(
         modifier = Modifier
-            .background(Color.White)
+            .background(AppTheme.colors.background)
             .fillMaxWidth()
             .fillMaxHeight(),
     ) {
@@ -181,20 +179,18 @@ fun TrainingContent(
                 modifier = Modifier
                     .padding(8.dp)
                     .align(Alignment.CenterEnd),
-                backgroundColor = Color.Black,
-                contentColor = Color.White,
+                backgroundColor = AppTheme.colors.mainContent,
+                contentColor = AppTheme.colors.background,
                 content = {
-                    val color = if (it) Color.Black else Color.White
+                    val color = if (it) AppTheme.colors.mainContent else AppTheme.colors.background
                     Text(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .padding(top = 4.dp, bottom = 6.dp)
                             .padding(horizontal = 12.dp),
                         text = stringResource(id = R.string.training_answer),
-                        style = TextStyle(
-                            color = color,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
+                        style = AppTheme.typography.smallTextBold.copy(
+                            color = color
                         )
                     )
                 },
@@ -210,11 +206,12 @@ fun TrainingContent(
                         || state.fieldState is TrainingFieldState.Answer
             )
             if (state.fieldState is TrainingFieldState.Correct) {
-                val animColor = remember { Animatable(Color.Black) }
+                val color = AppTheme.colors.mainContent
+                val animColor = remember { Animatable(color) }
                 val yPos = remember { Animatable(0f) }
                 LaunchedEffect(true) {
                     awaitAll(
-                        async { animColor.animateTo(Color.Black.copy(alpha = 0f), tween(1000)) },
+                        async { animColor.animateTo(color.copy(alpha = 0f), tween(1000)) },
                         async { yPos.animateTo(-40f, tween(1000)) }
                     )
                 }
@@ -234,11 +231,12 @@ fun TrainingContent(
                 )
             }
             if (state.fieldState is TrainingFieldState.Error) {
-                val animColor = remember { Animatable(Color.White) }
+                val color = AppTheme.colors.main
+                val animColor = remember { Animatable(color) }
                 val yPos = remember { Animatable(0f) }
                 LaunchedEffect(true) {
                     awaitAll(
-                        async { animColor.animateTo(Color.Black.copy(alpha = 0f), tween(1000)) },
+                        async { animColor.animateTo(color.copy(alpha = 0f), tween(1000)) },
                         async { yPos.animateTo(-40f, tween(1000)) }
                     )
                 }

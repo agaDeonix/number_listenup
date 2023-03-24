@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pinkunicorp.numberlistenup.R
+import com.pinkunicorp.numberlistenup.ui.theme.AppTheme
 
 sealed class Key {
     data class Number(val value: Int) : Key()
@@ -137,13 +138,11 @@ fun NumbersKeyboardTextButton(modifier: Modifier = Modifier, text: String, onCli
         modifier = modifier,
         onClick = onClick,
         content = {
-            val color = if (it) Color.White else Color.Black
+            val color = if (it) AppTheme.colors.main else AppTheme.colors.mainContent
             Text(
                 text = text,
-                style = TextStyle(
-                    color = color,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
+                style = AppTheme.typography.textBold.copy(
+                    color = color
                 )
             )
         }
@@ -153,8 +152,8 @@ fun NumbersKeyboardTextButton(modifier: Modifier = Modifier, text: String, onCli
 @Composable
 fun NumbersKeyboardButton(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.White,
-    contentColor: Color = Color.Black,
+    backgroundColor: Color = AppTheme.colors.main,
+    contentColor: Color = AppTheme.colors.mainContent,
     content: @Composable (isPressed: Boolean) -> Unit,
     onClick: () -> Unit
 ) {
@@ -169,11 +168,11 @@ fun NumbersKeyboardButton(
                 indication = null,
                 onClick = { onClick() }
             )
-            .background(color = contentColorPressed, shape = RoundedCornerShape(12.dp))
+            .background(color = contentColorPressed, shape = AppTheme.shapes.large)
             .border(
                 width = 1.dp,
                 color = backgroundColorPressed,
-                shape = RoundedCornerShape(12.dp)
+                shape = AppTheme.shapes.large
             ),
         contentAlignment = Alignment.Center
     ) {
@@ -191,7 +190,7 @@ fun NumbersKeyboardImageButton(
         modifier = modifier,
         onClick = onClick,
         content = {
-            val color = if (it) Color.White else Color.Black
+            val color = if (it) AppTheme.colors.main else AppTheme.colors.mainContent
             Image(
                 imageVector = ImageVector.vectorResource(id = imageId),
                 contentDescription = "",
@@ -205,7 +204,7 @@ fun NumbersKeyboardImageButton(
 @Composable
 fun NumbersKeyboardsPreview() {
     NumbersKeyboard(
-        modifier = Modifier.background(Color.White),
+        modifier = Modifier.background(AppTheme.colors.background),
         onNumberClick = {}
     )
 }

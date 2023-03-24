@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.pinkunicorp.numberlistenup.ui.theme.AppTheme
 
 @Composable
 fun NumberFieldView(
@@ -24,13 +25,13 @@ fun NumberFieldView(
     isCorrect: Boolean,
     hasError: Boolean,
 ) {
-    val textColor = if (isCorrect) Color.Black else if (hasError) Color.White else Color.Black
-    val backgroundColor = if (isCorrect) Color.White else if (hasError) Color.Black else Color.White
+    val textColor = if (isCorrect) AppTheme.colors.mainContent else if (hasError) AppTheme.colors.main else AppTheme.colors.mainContent
+    val backgroundColor = if (isCorrect) AppTheme.colors.main else if (hasError) AppTheme.colors.mainContent else AppTheme.colors.main
     val borderWidth = if (isCorrect || hasError) 3.dp else 1.dp
     Box(
         modifier = modifier
-            .border(width = borderWidth, color = textColor, shape = RoundedCornerShape(12.dp))
-            .background(backgroundColor, shape = RoundedCornerShape(12.dp))
+            .border(width = borderWidth, color = textColor, shape = AppTheme.shapes.large)
+            .background(backgroundColor, shape = AppTheme.shapes.large)
             .fillMaxWidth(),
         contentAlignment = Alignment.CenterStart
     ) {
@@ -39,9 +40,7 @@ fun NumberFieldView(
                 .padding(horizontal = 16.dp)
                 .padding(vertical = 12.dp),
             text = currentNumber,
-            style = TextStyle(
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Medium,
+            style = AppTheme.typography.textField.copy(
                 color = textColor
             )
         )
@@ -53,7 +52,7 @@ fun NumberFieldView(
 fun NumberFieldViewPreview() {
     NumberFieldView(
         modifier = Modifier
-            .background(Color.White)
+            .background(AppTheme.colors.background)
             .padding(8.dp),
         currentNumber = "123456789",
         isCorrect = false,
@@ -66,7 +65,7 @@ fun NumberFieldViewPreview() {
 fun NumberFieldViewWithCorrectPreview() {
     NumberFieldView(
         modifier = Modifier
-            .background(Color.White)
+            .background(AppTheme.colors.background)
             .padding(8.dp),
         currentNumber = "123456789",
         hasError = false,
@@ -79,7 +78,7 @@ fun NumberFieldViewWithCorrectPreview() {
 fun NumberFieldViewWithErrorPreview() {
     NumberFieldView(
         modifier = Modifier
-            .background(Color.White)
+            .background(AppTheme.colors.background)
             .padding(8.dp),
         currentNumber = "123456789",
         hasError = true,

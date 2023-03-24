@@ -5,40 +5,71 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.staticCompositionLocalOf
 
-private val DarkColorPalette = darkColors(
-    primary = White,
-    primaryVariant = White,
-    secondary = Black
-)
+val LocalNumberListenUpColor: ProvidableCompositionLocal<NumberListenUpColorsScheme> =
+    staticCompositionLocalOf { error("no provided") }
 
-private val LightColorPalette = lightColors(
-    primary = Black,
-    primaryVariant = Black,
-    secondary = White
+val LocalNumberListenUpTypography: ProvidableCompositionLocal<NumberListenUpTypography> =
+    staticCompositionLocalOf { error("no provided") }
 
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
-)
+val LocalNumberListenUpShape: ProvidableCompositionLocal<NumberListenUpShape> =
+    staticCompositionLocalOf { error("no provided") }
+
+object AppTheme {
+    val colors: NumberListenUpColorsScheme
+        @Composable
+        get() = LocalNumberListenUpColor.current
+    val typography: NumberListenUpTypography
+        @Composable
+        get() = LocalNumberListenUpTypography.current
+    val shapes: NumberListenUpShape
+        @Composable
+        get() = LocalNumberListenUpShape.current
+}
+
+fun mapMaterialColorScheme(
+    darkTheme: Boolean,
+    colors: NumberListenUpColorsScheme
+) = if (darkTheme) {
+    darkColors(
+        primary = colors.main,
+        onPrimary = colors.mainContent,
+        background = colors.background,
+        onBackground = colors.text,
+        secondary = colors.background,
+        onSecondary = colors.text
+    )
+} else {
+    lightColors(
+        primary = colors.main,
+        onPrimary = colors.mainContent,
+        background = colors.background,
+        onBackground = colors.text,
+        secondary = colors.background,
+        onSecondary = colors.text
+    )
+}
 
 @Composable
 fun AppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
+    val localNumberListenUpColors: NumberListenUpColorsScheme = if (darkTheme) {
+        NumberListenUpDarkColors
     } else {
-        LightColorPalette
+        NumberListenUpLightColors
     }
 
-    MaterialTheme(
-        colors = colors,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
-    )
+    CompositionLocalProvider(
+        LocalNumberListenUpColor provides localNumberListenUpColors,
+        LocalNumberListenUpTypography provides NumberListenUpTypography,
+        LocalNumberListenUpShape provides NumberListenUpShape
+    ) {
+        MaterialTheme(
+            colors = mapMaterialColorScheme(darkTheme, localNumberListenUpColors)
+        ) {
+            content()
+        }
+    }
 }

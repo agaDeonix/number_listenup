@@ -14,19 +14,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.pinkunicorp.numberlistenup.R
 import com.pinkunicorp.numberlistenup.data.model.NumberType
 import com.pinkunicorp.numberlistenup.data.model.NumberVariantState
+import com.pinkunicorp.numberlistenup.ui.theme.AppTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -61,7 +59,7 @@ fun SettingsContent(
 ) {
     Column(
         modifier = Modifier
-            .background(Color.White)
+            .background(AppTheme.colors.background)
             .fillMaxWidth()
             .fillMaxHeight(),
     ) {
@@ -76,10 +74,8 @@ fun SettingsContent(
                         .padding(top = 12.dp)
                         .fillMaxWidth(),
                     text = stringResource(id = R.string.settings_desc),
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                    style = AppTheme.typography.text,
+                    color = AppTheme.colors.mainContent
                 )
             }
             items(state.numberVariants) { numberVariantState ->
@@ -105,11 +101,12 @@ fun NumberVariantView(
         verticalAlignment = Alignment.Top
     ) {
         Checkbox(
-            checked = numberVariantState.isEnable, onCheckedChange = {
+            checked = numberVariantState.isEnable,
+            onCheckedChange = {
                 onCheckedChange(!numberVariantState.isEnable)
             },
             colors = CheckboxDefaults.colors(
-                checkedColor = Color.Black,
+                checkedColor = AppTheme.colors.mainContent,
             )
         )
         Column(
@@ -121,17 +118,13 @@ fun NumberVariantView(
         ) {
             Text(
                 text = stringResource(id = getNumberVariantNameId(numberVariantState.type)),
-                style = TextStyle(
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                style = AppTheme.typography.body,
+                color = AppTheme.colors.mainContent
             )
             Text(
                 text = stringResource(id = getNumberVariantDescId(numberVariantState.type)),
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal
-                )
+                style = AppTheme.typography.subLine,
+                color = AppTheme.colors.mainContent
             )
         }
     }
@@ -166,7 +159,7 @@ fun SettingsToolbarView(
         modifier = modifier
             .height(54.dp)
             .fillMaxWidth()
-            .background(Color.White)
+            .background(AppTheme.colors.background)
     ) {
         Box(
             modifier = Modifier
@@ -180,18 +173,16 @@ fun SettingsToolbarView(
                     .fillMaxSize()
                     .padding(8.dp),
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_back),
-                contentDescription = ""
+                contentDescription = "",
+                colorFilter = ColorFilter.tint(AppTheme.colors.mainContent)
             )
         }
 
         Text(
             text = stringResource(id = R.string.settings_title),
             modifier = Modifier.align(Alignment.Center),
-            style = TextStyle(
-                color = Color.Black,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
+            style = AppTheme.typography.textBold,
+            color = AppTheme.colors.mainContent
         )
     }
 }

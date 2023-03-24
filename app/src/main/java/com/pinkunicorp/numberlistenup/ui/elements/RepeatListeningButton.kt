@@ -14,6 +14,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pinkunicorp.numberlistenup.R
+import com.pinkunicorp.numberlistenup.ui.theme.AppTheme
 
 @Composable
 fun RepeatListeningButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
@@ -22,7 +23,7 @@ fun RepeatListeningButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
             .fillMaxHeight()
             .aspectRatio(1f),
         content = {
-            val color = if (it) Color.White else Color.Black
+            val color = if (it) AppTheme.colors.main else AppTheme.colors.mainContent
             Image(
                 modifier = Modifier
                     .padding(24.dp)
@@ -41,7 +42,7 @@ fun RepeatListeningButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
 @Composable
 fun RepeatListeningButtonPreview() {
     RepeatListeningButton(
-        modifier = Modifier.background(Color.White),
+        modifier = Modifier.background(AppTheme.colors.background),
         onClick = {}
     )
 }

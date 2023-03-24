@@ -10,16 +10,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.pinkunicorp.numberlistenup.R
 import com.pinkunicorp.numberlistenup.ui.elements.NumbersKeyboardButton
 import com.pinkunicorp.numberlistenup.ui.screens.Screen
+import com.pinkunicorp.numberlistenup.ui.theme.AppTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -43,7 +41,7 @@ fun HomeScreen(
 fun HomeContent(state: HomeState, onTrainingNavigation: () -> Unit) {
     Column(
         modifier = Modifier
-            .background(Color.White)
+            .background(AppTheme.colors.background)
             .fillMaxWidth()
             .fillMaxHeight(),
         verticalArrangement = Arrangement.Center,
@@ -52,27 +50,21 @@ fun HomeContent(state: HomeState, onTrainingNavigation: () -> Unit) {
         Text(
             modifier = Modifier.padding(50.dp),
             text = stringResource(id = R.string.home_app_name),
-            style = TextStyle(
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold
-            ),
-            textAlign = TextAlign.Center
+            style = AppTheme.typography.header,
+            textAlign = TextAlign.Center,
+            color = AppTheme.colors.text
         )
         Spacer(modifier = Modifier.height(50.dp))
 
         Text(
             text = stringResource(id = R.string.home_score_title),
-            style = TextStyle(
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Medium
-            )
+            style = AppTheme.typography.subHeader,
+            color = AppTheme.colors.text
         )
         Text(
             text = state.score.toString(),
-            style = TextStyle(
-                fontSize = 60.sp,
-                fontWeight = FontWeight.Bold
-            )
+            style = AppTheme.typography.score,
+            color = AppTheme.colors.text
         )
         Column(
             modifier = Modifier
@@ -85,17 +77,14 @@ fun HomeContent(state: HomeState, onTrainingNavigation: () -> Unit) {
                     .fillMaxWidth()
                     .padding(top = 20.dp),
                 content = {
-                    val color = if (it) Color.White else Color.Black
+                    val color = if (it) AppTheme.colors.main else AppTheme.colors.mainContent
                     Text(
                         modifier = Modifier
                             .padding(horizontal = 40.dp)
                             .padding(vertical = 10.dp),
                         text = stringResource(id = R.string.home_start),
                         color = color,
-                        style = TextStyle(
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Medium
-                        )
+                        style = AppTheme.typography.text
                     )
                 },
                 onClick = { onTrainingNavigation() }
