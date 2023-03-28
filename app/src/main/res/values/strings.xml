@@ -2,12 +2,12 @@
     <string name="app_name">Number ListenUp</string>
 
     <string name="home_app_name">Number ListenUp App</string>
-    <string name="home_score_title">Your score</string>
+    <string name="home_score_title">Your Score</string>
     <string name="home_start">Start</string>
 
-    <string name="score_best_score_title">Best score</string>
+    <string name="score_best_score_title">Best Score</string>
     <string name="score_current_score_title">Score</string>
-    <string name="score_try_again">Try again</string>
+    <string name="score_try_again">Try Again</string>
     <string name="score_finish">Finish</string>
 
     <string name="training_title">Training</string>
@@ -16,16 +16,16 @@
     <string name="training_answer">answer</string>
 
     <string name="settings_title">Settings</string>
-    <string name="settings_desc">Numeral types for trainings</string>
-    <string name="settings_number_whole_title">Whole numerals</string>
-    <string name="settings_number_whole_desc">numerals from 0 to 999\u0020999.</string>
-    <string name="settings_number_ordinal_title">Ordinal numerals</string>
-    <string name="settings_number_ordinal_desc">numerals from 0 to 999\u0020999.</string>
-    <string name="settings_number_rational_title">Rational numerals</string>
-    <string name="settings_number_rational_desc">numerals from 0 to 99 with before four digits after point.</string>
-    <string name="settings_number_fraction_title">Fraction numerals</string>
-    <string name="settings_number_fraction_desc">numerals from 1 to 999 in numerator and denominator.</string>
+    <string name="settings_desc">Numeral types for training</string>
+    <string name="settings_number_whole_title">Whole Numerals</string>
+    <string name="settings_number_whole_desc">Numerals from 0 to 999,999.</string>
+    <string name="settings_number_ordinal_title">Ordinal Numerals</string>
+    <string name="settings_number_ordinal_desc">Numerals from 0 to 999,999.</string>
+    <string name="settings_number_rational_title">Rational Numerals</string>
+    <string name="settings_number_rational_desc">Numerals from 0 to 99 with up to four digits after the decimal point.</string>
+    <string name="settings_number_fraction_title">Fraction Numerals</string>
+    <string name="settings_number_fraction_desc">Numerals from 1 to 999 in both numerator and denominator.</string>
     <string name="settings_number_time_title">Time</string>
-    <string name="settings_number_time_desc">several variants of time.</string>
-    <string name="settings_error_none_selected_types">"None selected types for training "</string>
+    <string name="settings_number_time_desc">Various representations of time.</string>
+    <string name="settings_error_none_selected_types">"No numeral types selected for training."</string>
 </resources>

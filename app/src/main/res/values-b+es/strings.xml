@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Number ListenUp</string>
+
+    <string name="home_app_name">Number ListenUp App</string>
+    <string name="home_score_title">Tu puntuación</string>
+    <string name="home_start">Comenzar</string>
+
+    <string name="score_best_score_title">Mejor puntuación</string>
+    <string name="score_current_score_title">Puntuación</string>
+    <string name="score_try_again">Intentar de nuevo</string>
+    <string name="score_finish">Terminar</string>
+
+    <string name="training_title">Entrenamiento</string>
+    <string name="training_correct">¡Correcto!</string>
+    <string name="training_incorrect">¡Incorrecto!</string>
+    <string name="training_answer">respuesta</string>
+
+    <string name="settings_title">Configuración</string>
+    <string name="settings_desc">Tipos de números para el entrenamiento</string>
+    <string name="settings_number_whole_title">Números enteros</string>
+    <string name="settings_number_whole_desc">Números del 0 al 999,999.</string>
+    <string name="settings_number_ordinal_title">Números ordinales</string>
+    <string name="settings_number_ordinal_desc">Números del 0 al 999,999.</string>
+    <string name="settings_number_rational_title">Números racionales</string>
+    <string name="settings_number_rational_desc">Números del 0 al 99 con hasta cuatro dígitos después del punto decimal.</string>
+    <string name="settings_number_fraction_title">Números fraccionarios</string>
+    <string name="settings_number_fraction_desc">Números del 1 al 999 en numerador y denominador.</string>
+    <string name="settings_number_time_title">Tiempo</string>
+    <string name="settings_number_time_desc">Varias representaciones del tiempo.</string>
+    <string name="settings_error_none_selected_types">"No se seleccionaron tipos de números para el entrenamiento."</string>
+</resources>

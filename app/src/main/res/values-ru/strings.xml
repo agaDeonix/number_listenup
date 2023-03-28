@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Number ListenUp</string>
+
+    <string name="home_app_name">Number ListenUp App</string>
+    <string name="home_score_title">Ваш счет</string>
+    <string name="home_start">Начать</string>
+
+    <string name="score_best_score_title">Лучший счет</string>
+    <string name="score_current_score_title">Счет</string>
+    <string name="score_try_again">Попробуйте еще раз</string>
+    <string name="score_finish">Завершить</string>
+
+    <string name="training_title">Тренировка</string>
+    <string name="training_correct">Правильно!</string>
+    <string name="training_incorrect">Неправильно!</string>
+    <string name="training_answer">ответ</string>
+
+    <string name="settings_title">Настройки</string>
+    <string name="settings_desc">Типы чисел для тренировки</string>
+    <string name="settings_number_whole_title">Целые числа</string>
+    <string name="settings_number_whole_desc">Числа от 0 до 999 999.</string>
+    <string name="settings_number_ordinal_title">Порядковые числа</string>
+    <string name="settings_number_ordinal_desc">Числа от 0 до 999 999.</string>
+    <string name="settings_number_rational_title">Рациональные числа</string>
+    <string name="settings_number_rational_desc">Числа от 0 до 99 с максимум четырьмя знаками после запятой.</string>
+    <string name="settings_number_fraction_title">Дробные числа</string>
+    <string name="settings_number_fraction_desc">Числа от 1 до 999 в числителе и знаменателе.</string>
+    <string name="settings_number_time_title">Время</string>
+    <string name="settings_number_time_desc">Различные представления времени.</string>
+    <string name="settings_error_none_selected_types">"Не выбрано ни одного типа чисел для тренировки."</string>
+</resources>
