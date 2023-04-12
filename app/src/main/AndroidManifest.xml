@@ -16,7 +16,9 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.NumberListenUp">
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.NumberListenUp"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
