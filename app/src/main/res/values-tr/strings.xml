@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Number ListenUp</string>
+
+    <string name="home_app_name">Number ListenUp App</string>
+    <string name="home_score_title">Puanınız</string>
+    <string name="home_start">Başla</string>
+
+    <string name="score_best_score_title">En İyi Puan</string>
+    <string name="score_current_score_title">Puan</string>
+    <string name="score_try_again">Tekrar Dene</string>
+    <string name="score_finish">Bitir</string>
+
+    <string name="training_title">Eğitim</string>
+    <string name="training_correct">Doğru!</string>
+    <string name="training_incorrect">Yanlış!</string>
+    <string name="training_answer">cevap</string>
+
+    <string name="settings_title">Ayarlar</string>
+    <string name="settings_desc">Eğitim için sayı türleri</string>
+    <string name="settings_number_whole_title">Tam Sayılar</string>
+    <string name="settings_number_whole_desc">0 ile 999.999 arasındaki sayılar.</string>
+    <string name="settings_number_ordinal_title">Sıralı Sayılar</string>
+    <string name="settings_number_ordinal_desc">0 ile 999.999 arasındaki sayılar.</string>
+    <string name="settings_number_rational_title">Kesirli Sayılar</string>
+    <string name="settings_number_rational_desc">0 ile 99 arasındaki sayılar, ondalık noktadan sonra en fazla dört basamak.</string>
+    <string name="settings_number_fraction_title">Kesir Sayılar</string>
+    <string name="settings_number_fraction_desc">Hem payda hem payda 1 ile 999 arasında olan sayılar.</string>
+    <string name="settings_number_time_title">Zaman</string>
+    <string name="settings_number_time_desc">Zamanın çeşitli gösterimleri.</string>
+    <string name="settings_error_none_selected_types">"Eğitim için seçili sayı türü yok."</string>
+</resources>

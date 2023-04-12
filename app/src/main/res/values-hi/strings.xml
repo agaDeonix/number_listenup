@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Number ListenUp</string>
+
+    <string name="home_app_name">Number ListenUp App</string>
+    <string name="home_score_title">आपका स्कोर</string>
+    <string name="home_start">प्रारंभ करें</string>
+
+    <string name="score_best_score_title">सर्वश्रेष्ठ स्कोर</string>
+    <string name="score_current_score_title">स्कोर</string>
+    <string name="score_try_again">फिर से प्रयास करें</string>
+    <string name="score_finish">समाप्त करें</string>
+
+    <string name="training_title">प्रशिक्षण</string>
+    <string name="training_correct">सही!</string>
+    <string name="training_incorrect">गलत!</string>
+    <string name="training_answer">उत्तर</string>
+
+    <string name="settings_title">सेटिंग्स</string>
+    <string name="settings_desc">प्रशिक्षण के लिए संख्या प्रकार</string>
+    <string name="settings_number_whole_title">पूर्ण संख्याएँ</string>
+    <string name="settings_number_whole_desc">0 से 999,999 तक की संख्याएँ।</string>
+    <string name="settings_number_ordinal_title">क्रमांकित संख्याएँ</string>
+    <string name="settings_number_ordinal_desc">0 से 999,999 तक की संख्याएँ।</string>
+    <string name="settings_number_rational_title">परिमेय संख्याएँ</string>
+    <string name="settings_number_rational_desc">0 से 99 तक की संख्याएँ, दशमलव बिंदु के बाद चार अंक तक।</string>
+    <string name="settings_number_fraction_title">भिन्न संख्याएँ</string>
+    <string name="settings_number_fraction_desc">गिनतारी और हर संख्या में 1 से 999 तक।</string>
+    <string name="settings_number_time_title">समय</string>
+    <string name="settings_number_time_desc">समय की विभिन्न प्रतिनिधित्व।</string>
+    <string name="settings_error_none_selected_types">"प्रशिक्षण के लिए कोई संख्या प्रकार नहीं चुना गया।"</string>
+</resources>

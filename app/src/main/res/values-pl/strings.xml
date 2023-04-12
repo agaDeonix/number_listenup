@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Number ListenUp</string>
+
+    <string name="home_app_name">Number ListenUp App</string>
+    <string name="home_score_title">Twój wynik</string>
+    <string name="home_start">Rozpocznij</string>
+
+    <string name="score_best_score_title">Najlepszy wynik</string>
+    <string name="score_current_score_title">Wynik</string>
+    <string name="score_try_again">Spróbuj ponownie</string>
+    <string name="score_finish">Zakończ</string>
+
+    <string name="training_title">Trening</string>
+    <string name="training_correct">Poprawnie!</string>
+    <string name="training_incorrect">Niepoprawnie!</string>
+    <string name="training_answer">odpowiedź</string>
+
+    <string name="settings_title">Ustawienia</string>
+    <string name="settings_desc">Rodzaje liczb do treningu</string>
+    <string name="settings_number_whole_title">Liczby całkowite</string>
+    <string name="settings_number_whole_desc">Liczby od 0 do 999 999.</string>
+    <string name="settings_number_ordinal_title">Liczby porządkowe</string>
+    <string name="settings_number_ordinal_desc">Liczby od 0 do 999 999.</string>
+    <string name="settings_number_rational_title">Liczby wymierne</string>
+    <string name="settings_number_rational_desc">Liczby od 0 do 99 z maksymalnie czterema cyframi po przecinku.</string>
+    <string name="settings_number_fraction_title">Ułamki</string>
+    <string name="settings_number_fraction_desc">Liczby od 1 do 999 zarówno w liczniku, jak i mianowniku.</string>
+    <string name="settings_number_time_title">Czas</string>
+    <string name="settings_number_time_desc">Różne reprezentacje czasu.</string>
+    <string name="settings_error_none_selected_types">"Nie wybrano żadnych rodzajów liczb do treningu."</string>
+</resources>
