@@ -35,10 +35,10 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
       - name: Upload Bundle
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3.1.2
         with:
-          name: Build Artifacts
-          path: app/build/outputs/
+          name: number_listenup_bundle
+          path: app/build/outputs/release/app-release.aab
       # Build and sign APK ("-x test" argument is used to skip tests)
       - name: Build APK
         run: ./gradlew :app:assembleRelease -x test
@@ -54,7 +54,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v3.1.2
         with:
-          name: number_listenup
+          name: number_listenup_apk
           path: app/build/outputs/apk/release/number_listenup_${{ github.event.inputs.version }}.apk
   release:
     name: Release APK
@@ -75,4 +75,6 @@ jobs:
           name: Release v${{ github.event.inputs.version }}
           draft: false
           prerelease: false
-          files: number_listenup/number_listenup_${{ github.event.inputs.version }}.apk
+          files: 
+            number_listenup_apk/number_listenup_${{ github.event.inputs.version }}.apk
+            number_listenup_bundle/app-release.aab
