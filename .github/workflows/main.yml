@@ -34,11 +34,13 @@ jobs:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+      - name: Rename Artifact
+        run: mv app/build/outputs/bundle/release/app-release.aab app/build/outputs/bundle/release/number_listenup_${{ github.event.inputs.version }}.aab
       - name: Upload Bundle
         uses: actions/upload-artifact@v3.1.2
         with:
           name: number_listenup_bundle
-          path: app/build/outputs/release/app-release.aab
+          path: app/build/outputs/bundle/release/number_listenup_${{ github.event.inputs.version }}.aab
       # Build and sign APK ("-x test" argument is used to skip tests)
       - name: Build APK
         run: ./gradlew :app:assembleRelease -x test
@@ -81,4 +83,4 @@ jobs:
           prerelease: false
           files: 
             number_listenup/number_listenup_${{ github.event.inputs.version }}.apk
-            number_listenup/app-release.aab
+            number_listenup/number_listenup_${{ github.event.inputs.version }}.aab
