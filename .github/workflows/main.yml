@@ -64,7 +64,11 @@ jobs:
       - name: Download APK from build
         uses: actions/download-artifact@v1
         with:
-          name: number_listenup
+          name: number_listenup_apk
+      - name: Download Bundle from build
+        uses: actions/download-artifact@v1
+        with:
+          name: number_listenup_bundle
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
@@ -76,5 +80,5 @@ jobs:
           draft: false
           prerelease: false
           files: 
-            number_listenup_apk/number_listenup_${{ github.event.inputs.version }}.apk
-            number_listenup_bundle/app-release.aab
+            number_listenup/number_listenup_${{ github.event.inputs.version }}.apk
+            number_listenup/app-release.aab
