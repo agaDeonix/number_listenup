@@ -59,7 +59,7 @@ jobs:
           name: number_listenup_apk
           path: app/build/outputs/apk/release/number_listenup_${{ github.event.inputs.version }}.apk
   release:
-    name: Release APK
+    name: release
     needs: build
     runs-on: ubuntu-latest
     steps:
