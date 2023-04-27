@@ -1,6 +1,12 @@
-name: Build Release App Bundle
+name: Android CI
 
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Application version'
+        required: true
+        default: '1.0'
 
 jobs:
   build:
@@ -22,14 +28,51 @@ jobs:
           fileName: 'keystore.jks'
           fileDir: '/home/runner/work/number_listenup/number_listenup/app/keystore/'
           encodedString: ${{ secrets.KEYSTORE }}
-      - name: build prod
+      - name: Build Bundle
         run: ./gradlew app:bundleRelease
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-      - name: Upload
+      - name: Upload Bundle
         uses: actions/upload-artifact@v2
         with:
           name: Build Artifacts
           path: app/build/outputs/
+      # Build and sign APK ("-x test" argument is used to skip tests)
+      - name: Build APK
+        run: ./gradlew :app:assembleRelease -x test
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+
+      # Show information about the APK's signing certificates
+      - name: Verify Signature
+        run: $ANDROID_SDK_ROOT/build-tools/33.0.1/apksigner verify --print-certs app/build/outputs/apk/release/number_listenup_${{ github.event.inputs.version }}.apk
+# Save the APK after the Build job is complete to publish it as a Github release in the next job
+      - name: Upload APK
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: <<application name>>
+          path: app/build/outputs/apk/release/number_listenup_${{ github.event.inputs.version }}.apk
+  release:
+    name: Release APK
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download APK from build
+        uses: actions/download-artifact@v1
+        with:
+          name: number_listenup
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          name: Release v${{ github.event.inputs.version }}
+          draft: false
+          prerelease: false
+          files: number_listenup/number_listenup_${{ github.event.inputs.version }}.apk
