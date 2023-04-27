@@ -4,7 +4,7 @@
 
 Number ListenUp is an Android app designed to help users practice listening to English numbers. The app presents a fun and interactive way to improve your English number listening skills.
 
-![Number ListenUp Screenshot](screenshot.png)
+![Number ListenUp Screenshot]([screenshot.png](https://github.com/agaDeonix/number_listenup/blob/main/screenshots/screenshot_1.webp))
 
 ## Table of Contents
 - [Features](#features)
@@ -16,9 +16,7 @@ Number ListenUp is an Android app designed to help users practice listening to E
 ## Features
 - Randomized number generation for versatile listening practice.
 - Simple and intuitive user interface.
-- Adjustable speed and range of numbers for a customized learning experience.
-- Supports both single and multiple number exercises.
-- Regular app updates with new features and improvements.
+- Adjustable range of numbers for a customized learning experience.
 
 ## Installation
 Download the app from the [Google Play Store](https://play.google.com/store/apps/details?id=com.pinkunicorp.numberlistenup).
