@@ -7,6 +7,21 @@ android {
     namespace 'com.pinkunicorp.numberlistenup'
     compileSdk 33
 
+    signingConfigs {
+        release {
+            def tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
+            def allFileFromDir = new File(tmpFilePath).listFiles()
+            if (allFileFromDir != null) {
+                def keystoreFile = allFileFromDir.first()
+                keystoreFile.renameTo("keystore/keystore.jks")
+            }
+            storFile = file("keystore/kestore.jks")
+            storePassword System.getenv("SIGNING_STORE_PASSWORD")
+            keyAlias System.getenv("SIGNING_KEY_ALIAS")
+            keyPassword System.getenv("SIGNING_KEY_PASSWORD")
+        }
+    }
+
     defaultConfig {
         applicationId "com.pinkunicorp.numberlistenup"
         minSdk 27
@@ -24,6 +39,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
