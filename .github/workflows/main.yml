@@ -81,4 +81,6 @@ jobs:
           name: Release v${{ github.event.inputs.version }}
           draft: false
           prerelease: false
-          files: number_listenup_bundle/number_listenup_${{ github.event.inputs.version }}.aab
+          files: 
+            number_listenup_bundle/number_listenup_${{ github.event.inputs.version }}.aab
+            number_listenup_apk/number_listenup_${{ github.event.inputs.version }}.apk
